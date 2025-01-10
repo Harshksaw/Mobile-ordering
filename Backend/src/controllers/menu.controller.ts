@@ -1,6 +1,11 @@
 import { Request, Response } from 'express';
-import { Menu } from '../models/menu.model';
+import { Menu } from '../models';
 
+
+
+export const ping = (req: Request, res: Response) => {
+    res.status(200).json({ message: 'Pong' });
+}
 // Get all menu items
 export const getAllMenuItems = async (req: Request, res: Response) => {
     try {
@@ -59,4 +64,16 @@ export const deleteMenuItem = async (req: Request, res: Response) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
+};
+
+
+
+// Export all controllers as default
+export default {
+    ping,
+    getAllMenuItems,
+    getMenuItemById,
+    createMenuItem,
+    updateMenuItem,
+    deleteMenuItem
 };

@@ -9,7 +9,7 @@ const menuSchema = new mongoose.Schema({
       description: { type: String }, // Optional description
       price: { 
         type: Number, 
-        required: true,
+
         // You could add validation for price to be positive
         validate: {
           validator: function(value) {
@@ -20,8 +20,19 @@ const menuSchema = new mongoose.Schema({
       },
       sizes: [{  // For different sizes like "half/full"
         name: { type: String }, 
-        price: { type: Number } 
+        price: { 
+          type: Number,
+          required: function() { return this.name != null; },
+          validate: {
+            validator: function(value) {
+              return value > 0;
+            },
+            message: 'Price must be a positive number'
+          }
+        }
       }],
+    
+
       options: [{ // For things like extra cheese, spice levels
         name: { type: String },
         price: { type: Number }
