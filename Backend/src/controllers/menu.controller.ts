@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Menu } from '../models';
+import { Item, Menu } from '../models';
 
 
 
@@ -30,13 +30,27 @@ export const getMenuItemById = async (req: Request, res: Response) => {
 };
 
 // Create a new menu item
-export const createMenuItem = async (req: Request, res: Response) => {
-    const menuItem = new Menu(req.body);
+export const createItem = async (req: Request, res: Response) => {
+    const { name, description, price, sizes, options } = req.body;
+    const image = req.files.image ? req.files.image : null
+    console.log("🚀 ~ createItem ~ req.body:", req.body)
+    const item = new Item({ name, description, price, sizes, options, image });
+
     try {
-        const newMenuItem = await menuItem.save();
-        res.status(201).json(newMenuItem);
+        const newItem = await item.save();
+        res.status(201).json(newItem);
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+};
+
+// Get all items
+export const getAllItems = async (req: Request, res: Response) => {
+    try {
+        const items = await Item.find();
+        res.status(200).json(items);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };
 

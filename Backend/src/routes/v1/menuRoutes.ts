@@ -32,7 +32,7 @@ const upload = multer({ storage: storage });
 
 
 MenuRouter.get("/ping", MenuController.ping);
-MenuRouter.post("/add", upload.single('image'), MenuController.createMenuItem);
+MenuRouter.post("/addMenuItem", upload.single('image'), MenuController.createMenuItem);
 MenuRouter.get("/list", MenuController.getAllMenuItems);
 MenuRouter.get("/:id", MenuController.getMenuItemById);
 MenuRouter.put("/:id", upload.single('image'), MenuController.updateMenuItem);
