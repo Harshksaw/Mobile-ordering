@@ -1,12 +1,4 @@
+import Admin from "./admin.model";
+import { Menu } from "./menu.model";
 
-
-
-import Admin from './admin.model';
-import Menu from './menu.model';
-
-export {Admin
-    ,Menu
-
-
-
-}
+export { Admin, Menu };
