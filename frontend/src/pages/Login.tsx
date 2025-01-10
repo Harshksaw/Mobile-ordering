@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({onLogin}:any) => {
   const [userDetails, setUserDetails] = React.useState({
     email: "",
     password: "",
@@ -23,6 +23,7 @@ const Login = () => {
       });
       if (res.data.success) {
         console.log("user logged in");
+        onLogin();
         navigate("/");
       }
     } catch (error) {

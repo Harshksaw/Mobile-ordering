@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes, useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+
 import "./App.css";
 import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Home from "./components/Home";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -12,15 +13,38 @@ function App() {
 
   const qrCodeValue = `${window.location.origin}/orders`;
 
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+  };
+
   return (
-    <>
-      <Login />
-      {/* <div cls="h-full w-full bg-green-800 text-red-500 flex items-center justify-center"> */}
-      {/* he */}
-      {/* <h1>Scan the QR Code to go to Orders</h1>
-        <QRCodeSVG value={qrCodeValue} size={256} /> */}
-      {/* </div> */}
-    </>
+
+
+<Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        {/* <Route
+          path="/orders"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Orders onLogout={handleLogout} />
+            </ProtectedRoute>
+          }
+        /> */}
+        
+      </Routes>
+    </Router>
+
+    
+
   );
 }
 
