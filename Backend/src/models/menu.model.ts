@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const menuSchema = new mongoose.Schema({
   name: { type: String, required: true }, // e.g., "Momos", "Shawarma"
+
   categories: [{ 
     name: { type: String, required: true }, // e.g., "Veg", "Chicken" 
     items: [{
@@ -40,6 +41,7 @@ const menuSchema = new mongoose.Schema({
       image: { type: String } // URL to an image of the item
     }]
   }]
+
 });
 
-const Menu = mongoose.model('Menu', menuSchema);
+export const Menu = mongoose.model("Menu", menuSchema);
