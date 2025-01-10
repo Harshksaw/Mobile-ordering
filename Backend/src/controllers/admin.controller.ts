@@ -9,7 +9,7 @@ export const registerAdmin = async (req: Request, res: Response) => {
     });
   }
   try {
-    const existingAdmin = await adminModel.findOne(email);
+    const existingAdmin = await adminModel.findOne({ email });
     if (existingAdmin)
       return res
         .status(403)
@@ -22,7 +22,8 @@ export const registerAdmin = async (req: Request, res: Response) => {
       role: "admin",
     });
 
-    const token = Admin.getJwtToken();
+    const token = await Admin.getJwtToken();
+
     return res.status(200).json({
       success: true,
       Admin,
@@ -60,7 +61,7 @@ export const LoginAdmin = async (req: Request, res: Response) => {
         .status(411)
         .json({ success: false, message: "invalid password" });
     }
-    const token = Admin.getJwtToken();
+    const token = await Admin.getJwtToken();
 
     return res.status(200).json({
       success: true,

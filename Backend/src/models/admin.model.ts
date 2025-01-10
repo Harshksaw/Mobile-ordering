@@ -8,7 +8,7 @@ interface IAdmin extends Document {
   role: string;
   createdAt: Date;
   updatedAt: Date;
-  getJwtToken: () => string;
+  getJwtToken(): string;
   comparePassword: (password: string) => Promise<boolean>;
 }
 
@@ -55,6 +55,7 @@ AdminSchema.methods.getJwtToken = async function () {
   const token = await sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_TIME,
   });
+
   return token;
 };
 
