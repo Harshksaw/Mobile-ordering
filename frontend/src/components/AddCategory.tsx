@@ -1,10 +1,9 @@
-import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
+import React, { useState, useEffect, FormEvent } from 'react';
+import axios from 'axios';
 
 const AddCategory = () => {
   const [categoryDetails, setCategoryDetails] = useState({
-    category: "",
-    items: "",
+    category: '',
   });
   const [categories, setCategories] = useState([]);
 
@@ -17,7 +16,7 @@ const AddCategory = () => {
         setCategories(res.data.categories);
       }
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error('Error fetching categories:', error);
     }
   };
 
@@ -30,16 +29,15 @@ const AddCategory = () => {
 
     try {
       const res = await axios.post(
-        `${BASE_URL}/api/v1/menu/createCategory${  categoryDetails.category }`,
-    
+        `${BASE_URL}/api/v1/menu/createCategory/${categoryDetails.category}`
       );
-      if (res.data.success) {
-        console.log("Category added successfully");
-        setCategoryDetails({ ...categoryDetails, category: "" }); // Clear the input field
+      if (res.status === 201) {
+        console.log('Category added successfully');
+        setCategoryDetails({ ...categoryDetails, category: '' }); // Clear the input field
         getCategories(); // Refresh the category list
       }
     } catch (error) {
-      console.error("Error adding category:", error);
+      console.error('Error adding category:', error);
     }
   };
 
@@ -49,39 +47,32 @@ const AddCategory = () => {
         <h2 className="text-xl font-bold mb-4">Create Category</h2>
         <form onSubmit={submitHandler}>
           <div className="mb-4">
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Category Name:
+            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+              Category Name
             </label>
             <input
               type="text"
               id="category"
+              name="category"
               value={categoryDetails.category}
-              onChange={(e) =>
-                setCategoryDetails({
-                  ...categoryDetails,
-                  category: e.target.value,
-                })
-              }
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              onChange={(e) => setCategoryDetails({ ...categoryDetails, category: e.target.value })}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              required
             />
           </div>
           <button
             type="submit"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
           >
             Add Category
           </button>
         </form>
       </div>
-
       <div className="w-full md:w-1/2 bg-white rounded-lg shadow-md p-4">
-        <h2 className="text-xl font-bold mb-4">All Categories</h2>
-        <ul className="list-disc pl-5 space-y-2">
+        <h2 className="text-xl font-bold mb-4">Categories</h2>
+        <ul>
           {categories.map((category) => (
-            <li key={category._id} className="text-lg text-gray-700">
+            <li key={category._id} className="mb-2 p-2 border-b border-gray-200">
               {category.name}
             </li>
           ))}
