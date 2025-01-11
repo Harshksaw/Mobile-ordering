@@ -36,7 +36,7 @@ const itemSchema: Schema = new Schema({
     name: { type: String },
     price: {
       type: Number,
-      required: function() { return this.name != null; },
+
       validate: {
         validator: function(value: number) {
           return value > 0;

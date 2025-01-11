@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import Router from "./routes/v1/index";
 import authRouter from "./routes/v1/authRoutes";
+import menuRouter  from "./routes/v1/menuRoutes";
 import connectDB from "./config/db";
 import cors from "cors";
 const app = express();
@@ -17,10 +18,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1", Router);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/menu",  menuRouter);
 app.get("/", (req, res) => {
   res.send("Hello from Node.js backend!");
 });
-connectDB();
-app.listen(port, () => {
+
+app.listen(port, async() => {
   console.log(`Server listening on port ${port}`);
+  await connectDB();
 });
