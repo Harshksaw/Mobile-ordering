@@ -41,7 +41,7 @@ const multerS = multer({ storage: multer.memoryStorage() })
 
 
 MenuRouter.get("/ping", ping);
-MenuRouter.post("/addMenuItem", multerS.single('image'),  createItem);
+MenuRouter.post("/addMenuItem", multerS.array('image'),  createItem);
 MenuRouter.get("/getAllMenuItems", getAllItems);
 MenuRouter.post("/createCategory/:name", createCategory);
 // MenuRouter.put("/:id", upload.single('image'), MenuController.updateMenuItem);
