@@ -8,9 +8,15 @@ const MenuRouter = express.Router();
 import dotenv from 'dotenv';
 
 dotenv.config();
-import  MenuController  from "../../controllers/menu.controller";
-import multer from 'multer';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import  {
+  createCategory
+  ,ping, updateMenuItem,
+  deleteMenuItem, createItem, getAllItems,
+
+}  from "../../controllers/menu.controller";
+// import multer from 'multer';
+// const multer = require('multer');
+// import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 
 cloudinary.config({
@@ -21,23 +27,23 @@ cloudinary.config({
 
   
   // Configure Multer storage using Cloudinary
-const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-      folder: "menu-items",
-      resource_type: "auto",
-    },
-})
-const upload = multer({ storage: storage });
+// const storage = new CloudinaryStorage({
+//     cloudinary: cloudinary,
+//     params: {
+//       folder: "menu-items",
+//       resource_type: "auto",
+//     },
+// })
+// const upload = multer({ storage: storage });
 
 
-MenuRouter.get("/ping", MenuController.ping);
-MenuRouter.post("/addMenuItem", upload.single('image'), MenuController.createMenuItem);
-MenuRouter.get("/list", MenuController.getAllMenuItems);
-MenuRouter.get("/:id", MenuController.getMenuItemById);
-MenuRouter.put("/:id", upload.single('image'), MenuController.updateMenuItem);
-MenuRouter.delete("/:id", MenuController.deleteMenuItem);
+MenuRouter.get("/ping", ping);
+// MenuRouter.post("/addMenuItem", upload.single('image'), MenuController.createMenuItem);
+// MenuRouter.get("/list", getAllMenuItems);
+// MenuRouter.get("/:id", getMenuItemById);
+// MenuRouter.put("/:id", upload.single('image'), MenuController.updateMenuItem);
+MenuRouter.delete("/:id", deleteMenuItem);
 
 
 
-module.exports = MenuRouter;
+export default MenuRouter;
