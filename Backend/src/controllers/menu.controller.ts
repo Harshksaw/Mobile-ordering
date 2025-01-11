@@ -7,27 +7,9 @@ import { Category, Item } from '../models';
 };
 
 // Get all menu items
- const getAllMenuItems = async (req: Request, res: Response) => {
-    try {
-        const menuItems = await Item.find();
-        res.status(200).json(menuItems);
-    } catch (error) {
-        res.status(500).json({ message: (error as Error).message });
-    }
-};
+
 
 // Get a single menu item by ID
- const getMenuItemById = async (req: Request, res: Response) => {
-    try {
-        const menuItem = await Item.findById(req.params.id);
-        if (!menuItem) {
-            return res.status(404).json({ message: 'Menu item not found' });
-        }
-        res.status(200).json(menuItem);
-    } catch (error) {
-        res.status(500).json({ message: (error as Error).message });
-    }
-};
 
 // Create a new menu item
  const createItem = async (req: Request, res: Response) => {
@@ -49,6 +31,18 @@ import { Category, Item } from '../models';
     try {
         const items = await Item.find();
         res.status(200).json(items);
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message });
+    }
+};
+
+const getMenuItemById = async (req: Request, res: Response) => {
+    try {
+        const menuItem = await Item.findById(req.params.id);
+        if (!menuItem) {
+            return res.status(404).json({ message: 'Menu item not found' });
+        }
+        res.status(200).json(menuItem);
     } catch (error) {
         res.status(500).json({ message: (error as Error).message });
     }
@@ -82,7 +76,7 @@ import { Category, Item } from '../models';
 
 // Create a new category
  const createCategory = async (req: Request, res: Response) => {
-    const { name } = req.body;
+    const { name } = req.params;
 
     try {
         const category = new Category({ name, items: [] });
@@ -93,11 +87,66 @@ import { Category, Item } from '../models';
     }
 };
 
+export const addItemToCategory = async (req: Request, res: Response) => {
+    const { categoryId, itemId } = req.body;
+
+    try {
+        // Find the category by ID
+        const category = await Category.findById(categoryId);
+        if (!category) {
+            return res.status(404).json({ message: 'Category not found' });
+        }
+
+        // Find the item by ID
+        const item = await Item.findById(itemId);
+        console.log("🚀 ~ addItemToCategory ~ item:", item)
+        if (!item) {
+            return res.status(404).json({ message: 'Item not found' });
+        }
+
+        // Add the item to the category
+        category.items.push(item);                                                                                                              
+
+        // Save the updated category
+        await category.save();
+
+        res.status(200).json(category);
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message });
+    }
+};
+
+ const getItemsFromCategory = async (req: Request, res: Response) => {
+    const { categoryId } = req.params;
+    const { fields } = req.query;
+
+    try {
+        // Convert fields query parameter to a space-separated string
+        const selectFields = fields ? (fields as string).split(',').join(' ') : 'name price';
+
+        // Find the category by ID and populate items with specific fields
+        const category = await Category.findById(categoryId).populate({
+            path: 'items',
+            select: selectFields
+        });
+
+        if (!category) {
+            return res.status(404).json({ message: 'Category not found' });
+        }
+
+        res.status(200).json(category.items);
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message });
+    }
+};
+
  export {
     ping,
     createItem,
     getAllItems,
     updateMenuItem,
     deleteMenuItem,
-    createCategory
+    getMenuItemById,
+    createCategory,
+    getItemsFromCategory
 }

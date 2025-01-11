@@ -7,11 +7,13 @@ import { v2 as cloudinary } from 'cloudinary';
 const MenuRouter = express.Router();
 import dotenv from 'dotenv';
 
+import multer from 'multer'
 dotenv.config();
 import  {
   createCategory
   ,ping, updateMenuItem,
   deleteMenuItem, createItem, getAllItems,
+  addItemToCategory,
 
 }  from "../../controllers/menu.controller";
 // import multer from 'multer';
@@ -28,21 +30,22 @@ cloudinary.config({
   
   // Configure Multer storage using Cloudinary
 // const storage = new CloudinaryStorage({
-//     cloudinary: cloudinary,
+//     cloudinary: cloudinary, 
 //     params: {
 //       folder: "menu-items",
 //       resource_type: "auto",
 //     },
 // })
 // const upload = multer({ storage: storage });
+const multerS = multer({ storage: multer.memoryStorage() })
 
 
 MenuRouter.get("/ping", ping);
-// MenuRouter.post("/addMenuItem", upload.single('image'), MenuController.createMenuItem);
-// MenuRouter.get("/list", getAllMenuItems);
-// MenuRouter.get("/:id", getMenuItemById);
+MenuRouter.post("/addMenuItem", multerS.single('image'),  createItem);
+MenuRouter.get("/getAllMenuItems", getAllItems);
+MenuRouter.post("/createCategory/:name", createCategory);
 // MenuRouter.put("/:id", upload.single('image'), MenuController.updateMenuItem);
-MenuRouter.delete("/:id", deleteMenuItem);
+MenuRouter.post("/addItemToCategory", addItemToCategory);
 
 
 
