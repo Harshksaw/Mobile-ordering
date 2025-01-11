@@ -14,8 +14,9 @@ import {
   deleteMenuItem,
   createItem,
   getAllItems,
-  addItemToCategory,
+
   getAllCategory,
+  addItemsToCategory,
 } from "../../controllers/menu.controller";
 // import multer from 'multer';
 // const multer = require('multer');
@@ -47,6 +48,6 @@ MenuRouter.get("/getAllMenuItems", getAllItems);
 MenuRouter.get("/getAllCategory", getAllCategory);
 MenuRouter.post("/createCategory/:name", createCategory);
 // MenuRouter.put("/:id", upload.single('image'), MenuController.updateMenuItem);
-MenuRouter.post("/addItemToCategory", addItemToCategory);
+MenuRouter.post("/addItemToCategory", addItemsToCategory);
 
 export default MenuRouter;

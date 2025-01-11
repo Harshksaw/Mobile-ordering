@@ -25,7 +25,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, handleLogout }) => {
             <Link to="/addItem">Add Item</Link>
           </li>
           <li>
-            <Link to="/CreateMenu">Add Item</Link>
+            <Link to="/CreateMenu">Create Menu</Link>
           </li>
         </ul>
       )}

@@ -158,8 +158,9 @@ export const getAllCategory = async (req: Request, res: Response) => {
     return res.status(400).json({ message: (error as Error).message });
   }
 };
-export const addItemToCategory = async (req: Request, res: Response) => {
-  const { categoryId, itemId } = req.body;
+
+ const addItemsToCategory = async (req: Request, res: Response) => {
+  const { categoryId, itemIds } = req.body;
 
   try {
     // Find the category by ID
@@ -168,15 +169,14 @@ export const addItemToCategory = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Category not found" });
     }
 
-    // Find the item by ID
-    const item = await Item.findById(itemId);
-    console.log("🚀 ~ addItemToCategory ~ item:", item);
-    if (!item) {
-      return res.status(404).json({ message: "Item not found" });
+    // Find the items by their IDs
+    const items = await Item.find({ '_id': { $in: itemIds } });
+    if (items.length !== itemIds.length) {
+      return res.status(404).json({ message: "One or more items not found" });
     }
 
-    // Add the item to the category
-    category.items.push(item);
+    // Add the items to the category
+    category.items.push(...items);
 
     // Save the updated category
     await category.save();
@@ -186,6 +186,7 @@ export const addItemToCategory = async (req: Request, res: Response) => {
     res.status(500).json({ message: (error as Error).message });
   }
 };
+
 
 const getItemsFromCategory = async (req: Request, res: Response) => {
   const { categoryId } = req.params;
@@ -221,5 +222,6 @@ export {
   deleteMenuItem,
   getMenuItemById,
   createCategory,
+  addItemsToCategory,
   getItemsFromCategory,
 };
