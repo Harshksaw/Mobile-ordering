@@ -55,22 +55,10 @@ export const getAllItems = async (req: Request, res: Response) => {
 };
 
 // Update an existing menu item
-export const updateMenuItem = async (req: Request, res: Response) => {
-    try {
-        const updatedMenuItem = await Menu.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedMenuItem) {
-            return res.status(404).json({ message: 'Menu item not found' });
-        }
-        res.status(200).json(updatedMenuItem);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
 // Delete a menu item
 export const deleteMenuItem = async (req: Request, res: Response) => {
     try {
-        const deletedMenuItem = await Menu.findByIdAndDelete(req.params.id);
+        const deletedMenuItem = await Item.findByIdAndDelete(req.params.id);
         if (!deletedMenuItem) {
             return res.status(404).json({ message: 'Menu item not found' });
         }
