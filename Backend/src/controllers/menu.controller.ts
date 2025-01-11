@@ -5,6 +5,17 @@ import { Category, Item } from '../models';
  const ping = (req: Request, res: Response) => {
     res.status(200).json({ message: 'Pong' });
 };
+// filepath: /Users/harshsaw/Documents/GitHub/Mobile-ordering/Backend/src/config/cloudinaryConfig.ts
+import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 
 // Get all menu items
 
@@ -14,10 +25,19 @@ import { Category, Item } from '../models';
 // Create a new menu item
  const createItem = async (req: Request, res: Response) => {
     const { name, description, price, sizes, options } = req.body;
-    const image = (req as any).files?.image ? (req as any).files.image : null;
+    // const image = (req as any).files?.image ? (req as any).files.image : null;
     console.log("🚀 ~ createItem ~ req.body:", req.body);
-    const item = new Item({ name, description, price, sizes, options, image });
 
+
+
+    const images = req.files as Express.Multer.File[];
+    const imageUrls: string[] = [];
+
+    for (const image of images) {
+        const result = await cloudinary.uploader.upload(image.path);
+        imageUrls.push(result.secure_url);
+    }
+    const item = new Item({ name, description, price, sizes, options, image: imageUrls });
     try {
         const newItem = await item.save();
         res.status(201).json(newItem);
