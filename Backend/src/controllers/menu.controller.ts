@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Category, Item } from "../models";
 import cloudinary from "../config/cloudinary";
+
 // Ping route
 const ping = (req: Request, res: Response) => {
   res.status(200).json({ message: "Pong" });
@@ -72,7 +73,7 @@ const createItem = async (req: Request, res: Response) => {
 const getAllItems = async (req: Request, res: Response) => {
   try {
     const items = await Item.find();
-    res.status(200).json(items);
+    res.status(200).json({ success: true, items });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
@@ -132,7 +133,18 @@ const createCategory = async (req: Request, res: Response) => {
     res.status(400).json({ message: (error as Error).message });
   }
 };
-
+export const getAllCategory = async (req: Request, res: Response) => {
+  try {
+    const categories = await Category.find();
+    return res.status(200).json({
+      success: true,
+      message: "categories fetched",
+      categories,
+    });
+  } catch (error) {
+    return res.status(400).json({ message: (error as Error).message });
+  }
+};
 export const addItemToCategory = async (req: Request, res: Response) => {
   const { categoryId, itemId } = req.body;
 
@@ -156,7 +168,7 @@ export const addItemToCategory = async (req: Request, res: Response) => {
     // Save the updated category
     await category.save();
 
-    res.status(200).json(category);
+    res.status(200).json({ success: true, category });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
