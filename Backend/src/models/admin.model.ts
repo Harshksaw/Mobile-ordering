@@ -1,6 +1,7 @@
 import { Schema, model, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { configDotenv } from "dotenv";
 interface IAdmin extends Document {
   username: string;
   password: string;
@@ -11,7 +12,7 @@ interface IAdmin extends Document {
   getJwtToken(): string;
   comparePassword: (password: string) => Promise<boolean>;
 }
-
+configDotenv();
 const AdminSchema: Schema = new Schema(
   {
     username: { type: String, required: true, unique: true },
