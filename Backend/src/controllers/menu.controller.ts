@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Category, Item } from "../models";
-import cloudinary from "../config/cloudinary";
+
 
 // Ping route
 const ping = (req: Request, res: Response) => {

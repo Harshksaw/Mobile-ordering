@@ -16,7 +16,7 @@ const Login = ({onLogin}:any) => {
       form.append("email", userDetails.email);
       form.append("password", userDetails.password);
 
-      const res = await axios.post(`${BASE_URL}/auth/login`, form, {
+    const res = await axios.post(`${BASE_URL}/api/v1/auth/login`, form, {
         headers: {
           "Content-Type": "application/json",
         },

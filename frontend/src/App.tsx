@@ -14,6 +14,7 @@ import Home from "./components/Home";
 import AddItem from "./components/AddItem";
 import AddCategory from "./components/AddCategory";
 import CreateCategory from "./components/CreateCategory";
+import Navbar from "./components/Navbar";
 
 function App() {
   const qrCodeValue = `${window.location.origin}/orders`;
@@ -30,18 +31,50 @@ function App() {
 
   return (
     <Router>
+       <Navbar isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/addItem" element={<AddItem />} />
-        <Route path="/addCategory" element={<AddCategory />} />
-        <Route path="/createCategory" element={<CreateCategory />} />
+        <Route
+          path="/"
+          element={
+
+          <Home  isAuthenticated={isAuthenticated}/>
+
+          }
+        />
+        <Route
+          path="/login"
+          element={<Login onLogin={handleLogin} />}
+        />
+        <Route
+          path="/addItem"
+          element={
+        <ProtectedRoute isAuthenticated={isAuthenticated}>
+          <AddItem />
+        </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/addCategory"
+          element={
+        <ProtectedRoute isAuthenticated={isAuthenticated}>
+          <AddCategory />
+        </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/createCategory"
+          element={
+        <ProtectedRoute isAuthenticated={isAuthenticated}>
+          <CreateCategory />
+        </ProtectedRoute>
+          }
+        />
         {/* <Route
           path="/orders"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Orders onLogout={handleLogout} />
-            </ProtectedRoute>
+        <ProtectedRoute isAuthenticated={isAuthenticated}>
+          <Orders onLogout={handleLogout} />
+        </ProtectedRoute>
           }
         /> */}
       </Routes>
