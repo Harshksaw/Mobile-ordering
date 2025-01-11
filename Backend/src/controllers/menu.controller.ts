@@ -6,12 +6,24 @@ import cloudinary from "../config/cloudinary";
 const ping = (req: Request, res: Response) => {
   res.status(200).json({ message: "Pong" });
 };
+// filepath: /Users/harshsaw/Documents/GitHub/Mobile-ordering/Backend/src/config/cloudinaryConfig.ts
+import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 
 // Get all menu items
 
 // Get a single menu item by ID
 
 // Create a new menu item
+
 const createItem = async (req: Request, res: Response) => {
   const { name, description, price, sizes, options } = req.body;
   //   const image = (req as any).file ? (req as any).file.image : null;
@@ -67,6 +79,7 @@ const createItem = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({ message: (error as Error).message });
   }
+
 };
 
 // Get all items

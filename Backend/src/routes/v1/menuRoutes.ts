@@ -40,7 +40,9 @@ cloudinary.config({
 const upload = multer({ storage: multer.memoryStorage() });
 
 MenuRouter.get("/ping", ping);
+
 MenuRouter.post("/addMenuItem", upload.single("image"), createItem);
+
 MenuRouter.get("/getAllMenuItems", getAllItems);
 MenuRouter.get("/getAllCategory", getAllCategory);
 MenuRouter.post("/createCategory/:name", createCategory);
