@@ -1,19 +1,19 @@
 // filepath: /Users/harshsaw/Documents/GitHub/Mobile-ordering/frontend/src/components/Navbar.tsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 interface NavbarProps {
   isAuthenticated: boolean;
+  handleLogout: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, handleLogout }) => {
+  // temporary console.log
+  console.log(handleLogout);
   return (
     <div className="w-full flex  p-4">
       {!isAuthenticated ? (
-        <Link
-          to="/login"
-          className="bg-red-500 text-white p-4 rounded-md"
-        >
+        <Link to="/login" className="bg-red-500 text-white p-4 rounded-md">
           Login
         </Link>
       ) : (

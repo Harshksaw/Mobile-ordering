@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { QRCodeSVG } from "qrcode.react";
+// import { QRCodeSVG } from "qrcode.react";
 
 import "./App.css";
 import Login from "./pages/Login";
@@ -13,7 +13,7 @@ import Navbar from "./components/Navbar";
 import AddItemsToCategory from "./components/AddCategory";
 
 function App() {
-  const qrCodeValue = `${window.location.origin}/orders`;
+  // const qrCodeValue = `${window.location.origin}/orders`;
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 

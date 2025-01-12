@@ -1,6 +1,6 @@
 import axios from "axios";
-import { error } from "console";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+
+import { ChangeEvent, FormEvent, useState } from "react";
 
 const AddItem = () => {
   const [itemsDetails, setItemsDetails] = useState({

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, FormEvent } from 'react';
-import axios from 'axios';
+import { useState, useEffect, FormEvent } from "react";
+import axios from "axios";
 
 const AddCategory = () => {
-  const [categoryId, setCategoryId] = useState('');
+  const [categoryId, setCategoryId] = useState("");
   const [itemIds, setItemIds] = useState<string[]>([]);
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
@@ -16,9 +16,18 @@ const AddCategory = () => {
         setCategories(res.data.categories);
       }
     } catch (error) {
-      console.error('Error fetching categories:', error);
+      console.error("Error fetching categories:", error);
     }
   };
+  interface Category {
+    _id: string;
+    name: string;
+  }
+
+  interface Item {
+    _id: string;
+    name: string;
+  }
 
   const getItems = async () => {
     try {
@@ -27,7 +36,7 @@ const AddCategory = () => {
         setItems(res.data.items);
       }
     } catch (error) {
-      console.error('Error fetching items:', error);
+      console.error("Error fetching items:", error);
     }
   };
 
@@ -48,15 +57,18 @@ const AddCategory = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/v1/menu/addItemsToCategory`, {
-        categoryId,
-        itemIds,
-      });
+      const res = await axios.post(
+        `${BASE_URL}/api/v1/menu/addItemsToCategory`,
+        {
+          categoryId,
+          itemIds,
+        }
+      );
       if (res.data.success) {
-        console.log('Items added to category successfully');
+        console.log("Items added to category successfully");
       }
     } catch (error) {
-      console.error('Error adding items to category:', error);
+      console.error("Error adding items to category:", error);
     }
   };
 
@@ -66,7 +78,10 @@ const AddCategory = () => {
         <h2 className="text-xl font-bold mb-4">Add Items to Category</h2>
         <form onSubmit={submitHandler}>
           <div className="mb-4">
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="category"
+              className="block text-sm font-medium text-gray-700"
+            >
               Select Category
             </label>
             <select
@@ -78,7 +93,7 @@ const AddCategory = () => {
               required
             >
               <option value="">Select a category</option>
-              {categories.map((category) => (
+              {categories.map((category: Category) => (
                 <option key={category._id} value={category._id}>
                   {category.name}
                 </option>
@@ -86,11 +101,14 @@ const AddCategory = () => {
             </select>
           </div>
           <div className="mb-4 w-full h-full">
-            <label htmlFor="items" className="block text-2xl font-medium text-gray-700">
+            <label
+              htmlFor="items"
+              className="block text-2xl font-medium text-gray-700"
+            >
               Select Items
             </label>
             <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 h-96 overflow-y-auto">
-              {items.map((item) => (
+              {items.map((item: Item) => (
                 <div key={item._id} className="flex items-center">
                   <input
                     type="checkbox"
@@ -101,7 +119,10 @@ const AddCategory = () => {
                     onChange={() => handleItemChange(item._id)}
                     className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                   />
-                  <label htmlFor={`item-${item._id}`} className="ml-2 block text-sm text-gray-700">
+                  <label
+                    htmlFor={`item-${item._id}`}
+                    className="ml-2 block text-sm text-gray-700"
+                  >
                     {item.name}
                   </label>
                 </div>
