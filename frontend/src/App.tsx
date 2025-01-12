@@ -1,23 +1,70 @@
-// import { useState } from 'react'
-// import { useNavigate } from 'react-router-dom'
-// import { QRCodeSVG } from 'qrcode.react'
+import { useState } from "react";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { QRCodeSVG } from "qrcode.react";
 
 import "./App.css";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Home from "./components/Home";
+import AddItem from "./components/AddItem";
+import AddCategory from "./components/AddCategory";
+
+import Navbar from "./components/Navbar";
+import AddItemsToCategory from "./components/AddCategory";
 
 function App() {
-  // const [count, setCount] = useState(0)
-  // const navigate = useNavigate()
+  const qrCodeValue = `${window.location.origin}/orders`;
 
-  // const qrCodeValue = `${window.location.origin}/orders`;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+  };
 
   return (
-    <>
-      <div className="h-full w-full bg-green-800 text-red-500 flex items-center justify-center">
-        he
-        {/* <h1>Scan the QR Code to go to Orders</h1>
-        <QRCodeSVG value={qrCodeValue} size={256} /> */}
-      </div>
-    </>
+    <Router>
+      <Navbar isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
+      <Routes>
+        <Route path="/" element={<Home isAuthenticated={isAuthenticated} />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route
+          path="/addItem"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <AddItem />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/addCategory"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <AddCategory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/createMenu"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <AddItemsToCategory />
+            </ProtectedRoute>
+          }
+        />
+        {/* <Route
+          path="/orders"
+          element={
+        <ProtectedRoute isAuthenticated={isAuthenticated}>
+          <Orders onLogout={handleLogout} />
+        </ProtectedRoute>
+          }
+        /> */}
+      </Routes>
+    </Router>
   );
 }
 
