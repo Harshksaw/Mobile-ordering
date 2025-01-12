@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = ({onLogin}:any) => {
+const Login = ({ onLogin }: any) => {
   const [userDetails, setUserDetails] = React.useState({
     email: "",
     password: "",
@@ -16,7 +16,7 @@ const Login = ({onLogin}:any) => {
       form.append("email", userDetails.email);
       form.append("password", userDetails.password);
 
-    const res = await axios.post(`${BASE_URL}/api/v1/auth/login`, form, {
+      const res = await axios.post(`${BASE_URL}/auth/login`, form, {
         headers: {
           "Content-Type": "application/json",
         },
