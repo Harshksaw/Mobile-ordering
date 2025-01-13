@@ -25,6 +25,7 @@ cloudinary.config({
 
 const createItem = async (req: Request, res: Response) => {
   const { name, description, price, sizes, options } = req.body;
+  console.log(req.body);
   //   const image = (req as any).file ? (req as any).file.image : null;
   const image = req.file;
   //   console.log("🚀 ~ createItem ~ req.body:", req.body);
@@ -58,12 +59,13 @@ const createItem = async (req: Request, res: Response) => {
       .json({ success: false, message: "Image upload failed", error });
   }
   //   }
+  const parsedSizes = JSON.parse(sizes);
 
   const item = new Item({
     name,
     description,
     price,
-    sizes,
+    sizes: parsedSizes,
     options,
     image: imageUrl,
     // quantity,
@@ -77,6 +79,7 @@ const createItem = async (req: Request, res: Response) => {
       newItem,
     });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ message: (error as Error).message });
   }
 };
