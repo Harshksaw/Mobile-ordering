@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 
 import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
@@ -149,13 +150,17 @@ const AddItem = () => {
             value={itemsDetails.sizes.price}
             onChange={handleOnChange}
           />
-          <button
-            type="submit"
-            className="text-white px-4 py-2 text-lg capitalize mb-2"
-          >
-            {" "}
-            Submit
-          </button>
+          {isLoading ? (
+            <Loader2 />
+          ) : (
+            <button
+              type="submit"
+              className="text-white px-4 py-2 text-lg capitalize mb-2"
+            >
+              {" "}
+              Submit
+            </button>
+          )}
         </form>
       </div>
     </div>
