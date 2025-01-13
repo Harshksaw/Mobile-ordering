@@ -13,7 +13,11 @@ export const createOrder = async (req: Request, res: Response) => {
 
     // await newOrder.save();
     console.log(newOrder);
-    return res.status(201).json(newOrder);
+    return res.status(201).json({
+      succees: true,
+      message: "order created successfully",
+      newOrder,
+    });
   } catch (error) {
     console.log("errir in create order", error);
   }
@@ -31,8 +35,13 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     if (!updatedOrder) {
       return res.status(404).json({ message: "Order not found" });
     }
-    emitMessageToGroup("12345", "order-processsing", "this is ");
-    res.status(200).json(updatedOrder);
+    emitMessageToGroup("12345", "order-processsing", "this is order");
+    res.status(200).json({
+      success: true,
+      message: "updated order status",
+
+      updatedOrder,
+    });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
@@ -49,7 +58,11 @@ export const getOrderByStatus = async (req: Request, res: Response) => {
         .json({ message: "No orders found with this status" });
     }
 
-    res.status(200).json(orders);
+    res.status(200).json({
+      success: true,
+      message: "order feteched by status",
+      orders,
+    });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }

@@ -12,6 +12,7 @@ const Home: React.FC<HomeProps> = ({ isAuthenticated }) => {
 
   socket.on("connect", () => {
     console.log("Connected to socket server");
+    // order Id willl come in the future
     socket.emit("joinGroup", "12345");
   });
 

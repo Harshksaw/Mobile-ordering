@@ -12,11 +12,13 @@
   "dependencies": {
     "@babel/runtime": "^7.26.0",
     "axios": "^1.7.9",
+    "lucide-react": "^0.471.1",
     "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-qr-scanner": "^1.0.0-alpha.11",
     "react-router-dom": "^7.1.1",
+    "react-toastify": "^11.0.2",
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {

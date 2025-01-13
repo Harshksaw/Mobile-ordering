@@ -1,14 +1,13 @@
 import { Request, Response } from "express";
 import { Category, Item } from "../models";
 
-
 // Ping route
 const ping = (req: Request, res: Response) => {
   res.status(200).json({ message: "Pong" });
 };
 // filepath: /Users/harshsaw/Documents/GitHub/Mobile-ordering/Backend/src/config/cloudinaryConfig.ts
-import { v2 as cloudinary } from 'cloudinary';
-import dotenv from 'dotenv';
+import { v2 as cloudinary } from "cloudinary";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -79,7 +78,6 @@ const createItem = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({ message: (error as Error).message });
   }
-
 };
 
 // Get all items
@@ -98,7 +96,7 @@ const getMenuItemById = async (req: Request, res: Response) => {
     if (!menuItem) {
       return res.status(404).json({ message: "Menu item not found" });
     }
-    res.status(200).json(menuItem);
+    res.status(200).json({ success: true, menuItem });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
@@ -126,9 +124,11 @@ const deleteMenuItem = async (req: Request, res: Response) => {
   try {
     const deletedMenuItem = await Item.findByIdAndDelete(req.params.id);
     if (!deletedMenuItem) {
-      return res.status(404).json({ message: "Menu item not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Menu item not found" });
     }
-    res.status(200).json({ message: "Menu item deleted" });
+    res.status(200).json({ success: true, message: "Menu item deleted" });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
@@ -159,7 +159,7 @@ export const getAllCategory = async (req: Request, res: Response) => {
   }
 };
 
- const addItemsToCategory = async (req: Request, res: Response) => {
+const addItemsToCategory = async (req: Request, res: Response) => {
   const { categoryId, itemIds } = req.body;
 
   try {
@@ -170,7 +170,7 @@ export const getAllCategory = async (req: Request, res: Response) => {
     }
 
     // Find the items by their IDs
-    const items = await Item.find({ '_id': { $in: itemIds } });
+    const items = await Item.find({ _id: { $in: itemIds } });
     if (items.length !== itemIds.length) {
       return res.status(404).json({ message: "One or more items not found" });
     }
@@ -186,7 +186,6 @@ export const getAllCategory = async (req: Request, res: Response) => {
     res.status(500).json({ message: (error as Error).message });
   }
 };
-
 
 const getItemsFromCategory = async (req: Request, res: Response) => {
   const { categoryId } = req.params;

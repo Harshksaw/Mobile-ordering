@@ -1,14 +1,18 @@
 import axios from "axios";
+import { LoaderCircle } from "lucide-react";
 import React, { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const CreateCategory = () => {
   const [categoryName, setCategoryName] = React.useState("");
   const [categories, setCategories] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("categoryName", categoryName);
     try {
+      setIsLoading(true);
       const res = await axios.post(
         `${BASE_URL}/menu/createCategory/${categoryName}`
 
@@ -19,9 +23,13 @@ const CreateCategory = () => {
         // }
       );
       if (res.data.success) {
+        toast.success("category added successfully");
+        setIsLoading(false);
         console.log("category added successfully");
       }
     } catch (error) {
+      toast.error("error in add category ");
+      setIsLoading(false);
       console.log("error in add category frontend", error);
     }
   };
@@ -59,14 +67,17 @@ const CreateCategory = () => {
               setCategoryName(e.target.value);
             }}
           />
-
-          <button
-            type="submit"
-            className="text-white px-4 py-2 text-lg capitalize mb-2"
-          >
-            {" "}
-            Submit
-          </button>
+          {isLoading ? (
+            <LoaderCircle size={48} className="text-white" />
+          ) : (
+            <button
+              type="submit"
+              className="text-white px-4 py-2 text-lg capitalize mb-2"
+            >
+              {" "}
+              Submit
+            </button>
+          )}
         </form>
         <div className="flex flex-col gap-5">
           <h1 className="text-lg font-medium">Categories</h1>

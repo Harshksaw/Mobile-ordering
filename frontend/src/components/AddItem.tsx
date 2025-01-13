@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { ChangeEvent, FormEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 const AddItem = () => {
   const [itemsDetails, setItemsDetails] = useState({
@@ -13,7 +14,7 @@ const AddItem = () => {
     },
     image: null as File | null,
   });
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name.startsWith("sizes.")) {
@@ -35,6 +36,7 @@ const AddItem = () => {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     const formData = new FormData();
     formData.append("name", itemsDetails.dishName);
     formData.append("description", itemsDetails.description);
@@ -53,9 +55,13 @@ const AddItem = () => {
         },
       });
       if (res.data.success) {
+        setIsLoading(false);
+        toast.success("Item added successfully");
         console.log("Item added successfully");
       }
     } catch (error) {
+      setIsLoading(false);
+      toast.error("error in add item");
       console.log("error in add item frontend", error);
     }
   };
