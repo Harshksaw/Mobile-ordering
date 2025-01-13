@@ -26,7 +26,7 @@ function App() {
   };
 
   return (
-    <Router>
+    <div>
       <Navbar isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Home isAuthenticated={isAuthenticated} />} />
@@ -64,7 +64,7 @@ function App() {
           }
         /> */}
       </Routes>
-    </Router>
+    </div>
   );
 }
 
