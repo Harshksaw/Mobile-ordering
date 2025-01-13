@@ -60,7 +60,7 @@ const AddCategory = () => {
 
     try {
       setIsLoading(true);
-      const res = await axios.post(`${BASE_URL}/api/v1/menu/addItemsToCategory`, {
+      const res = await axios.post(`${BASE_URL}/menu/addItemsToCategory`, {
         categoryId,
         itemIds,
       });
