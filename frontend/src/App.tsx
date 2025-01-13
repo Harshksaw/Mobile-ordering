@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route,  Routes } from "react-router-dom";
 // import { QRCodeSVG } from "qrcode.react";
 
 import "./App.css";
