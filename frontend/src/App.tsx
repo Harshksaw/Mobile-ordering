@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route,  Routes } from "react-router-dom";
 // import { QRCodeSVG } from "qrcode.react";
 
 import "./App.css";
@@ -27,7 +27,7 @@ function App() {
   };
 
   return (
-    <Router>
+    <div>
       <Navbar isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Home isAuthenticated={isAuthenticated} />} />
@@ -74,7 +74,7 @@ function App() {
           }
         /> */}
       </Routes>
-    </Router>
+    </div>
   );
 }
 
