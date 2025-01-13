@@ -50,7 +50,7 @@ const AddItem = () => {
     }
 
     try {
-      const res = await axios.post(`${BASE_URL}/menu/addMenuItem`, formData, {
+      const res = await axios.post(`${BASE_URL}/api/v1/menu/addMenuItem`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
