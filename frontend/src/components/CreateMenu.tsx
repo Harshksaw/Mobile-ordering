@@ -14,7 +14,7 @@ const CreateCategory = () => {
     try {
       setIsLoading(true);
       const res = await axios.post(
-        `${BASE_URL}/menu/createCategory/${categoryName}`
+        `${BASE_URL}/api/v1/menu/createCategory/${categoryName}`
 
         // {
         //   headers: {
@@ -35,7 +35,7 @@ const CreateCategory = () => {
   };
   const getCategories = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/menu/getAllCategory`);
+      const res = await axios.get(`${BASE_URL}/api/v1/menu/getAllCategory`);
       if (res.data.success) {
         setCategories(res.data.categories);
         console.log("categories", res.data.categories);

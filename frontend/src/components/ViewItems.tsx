@@ -16,7 +16,7 @@ const ViewItems = () => {
 
   const getItems = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/menu/getAllMenuItems`);
+      const res = await axios.get(`${BASE_URL}/api/v1/menu/getAllMenuItems`);
       if (res.data.success) {
         setItems(res.data.items);
       }

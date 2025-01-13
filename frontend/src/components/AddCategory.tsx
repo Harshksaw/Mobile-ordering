@@ -13,7 +13,7 @@ const AddCategory = () => {
 
   const getCategories = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/menu/getAllCategory`);
+      const res = await axios.get(`${BASE_URL}/api/v1/api/v1/menu/getAllCategory`);
       if (res.data.success) {
         setCategories(res.data.categories);
       }
@@ -33,7 +33,7 @@ const AddCategory = () => {
 
   const getItems = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/menu/getAllMenuItems`);
+      const res = await axios.get(`${BASE_URL}/api/v1/menu/getAllMenuItems`);
       if (res.data.success) {
         setItems(res.data.items);
       }
