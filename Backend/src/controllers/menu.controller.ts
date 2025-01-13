@@ -66,6 +66,7 @@ const createItem = async (req: Request, res: Response) => {
     sizes,
     options,
     image: imageUrl,
+    // quantity,
   });
 
   try {
