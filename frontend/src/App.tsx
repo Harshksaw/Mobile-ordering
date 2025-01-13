@@ -11,6 +11,7 @@ import AddCategory from "./components/AddCategory";
 
 import Navbar from "./components/Navbar";
 import AddItemsToCategory from "./components/AddCategory";
+import ViewItems from "./components/ViewItems";
 
 function App() {
   // const qrCodeValue = `${window.location.origin}/orders`;
@@ -55,6 +56,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/viewItem"
+          element={
+            // <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ViewItems />
+            // </ProtectedRoute>
+          }
+        />
+
         {/* <Route
           path="/orders"
           element={

@@ -1,17 +1,19 @@
 import { useState, useEffect, FormEvent } from "react";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 const AddCategory = () => {
   const [categoryId, setCategoryId] = useState("");
   const [itemIds, setItemIds] = useState<string[]>([]);
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const getCategories = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/v1/menu/getAllCategory`);
+      const res = await axios.get(`${BASE_URL}/menu/getAllCategory`);
       if (res.data.success) {
         setCategories(res.data.categories);
       }
@@ -31,7 +33,7 @@ const AddCategory = () => {
 
   const getItems = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/v1/menu/getAllMenuItems`);
+      const res = await axios.get(`${BASE_URL}/menu/getAllMenuItems`);
       if (res.data.success) {
         setItems(res.data.items);
       }
@@ -57,17 +59,19 @@ const AddCategory = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        `${BASE_URL}/api/v1/menu/addItemsToCategory`,
-        {
-          categoryId,
-          itemIds,
-        }
-      );
+      setIsLoading(true);
+      const res = await axios.post(`${BASE_URL}/menu/addItemsToCategory`, {
+        categoryId,
+        itemIds,
+      });
       if (res.data.success) {
+        toast.success("Items added to category successfully");
+        setIsLoading(false);
         console.log("Items added to category successfully");
       }
     } catch (error) {
+      toast.error("Error adding items to category");
+      setIsLoading(false);
       console.error("Error adding items to category:", error);
     }
   };
@@ -129,12 +133,16 @@ const AddCategory = () => {
               ))}
             </div>
           </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
-          >
-            Add Items to Category
-          </button>
+          {isLoading ? (
+            <Loader2 />
+          ) : (
+            <button
+              type="submit"
+              className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+            >
+              Add Items to Category
+            </button>
+          )}
         </form>
       </div>
     </div>

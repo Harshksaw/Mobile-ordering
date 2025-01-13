@@ -14,7 +14,6 @@ import {
   deleteMenuItem,
   createItem,
   getAllItems,
-
   getAllCategory,
   addItemsToCategory,
 } from "../../controllers/menu.controller";
@@ -49,5 +48,6 @@ MenuRouter.get("/getAllCategory", getAllCategory);
 MenuRouter.post("/createCategory/:name", createCategory);
 // MenuRouter.put("/:id", upload.single('image'), MenuController.updateMenuItem);
 MenuRouter.post("/addItemToCategory", addItemsToCategory);
+MenuRouter.post("/deleteMenuItem/:id", deleteMenuItem);
 
 export default MenuRouter;
