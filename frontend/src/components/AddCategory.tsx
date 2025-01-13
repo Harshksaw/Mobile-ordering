@@ -13,7 +13,7 @@ const AddCategory = () => {
 
   const getCategories = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/v1/api/v1/menu/getAllCategory`);
+      const res = await axios.get(`${BASE_URL}/api/v1/menu/getAllCategory`);
       if (res.data.success) {
         setCategories(res.data.categories);
       }
