@@ -43,8 +43,14 @@ const itemSchema: Schema = new Schema({
         },
         message: 'Price must be a positive number'
       }
+    },
+    quantity:{
+      type:String,
+      required:true
+      
     }
   }],
+  
   options: [{
     name: { type: String },
     price: { type: Number }
