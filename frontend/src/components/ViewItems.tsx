@@ -26,7 +26,7 @@ const ViewItems = () => {
   };
   const onDelete = async (id: string) => {
     const res = await axios.post(
-      `${BASE_URL}/menu/deleteMenuItem/${id}`
+      `${BASE_URL}/api/v1/menu/deleteMenuItem/${id}`
       //  {
       // params: {
       //   id: id,
