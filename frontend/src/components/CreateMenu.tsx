@@ -25,6 +25,7 @@ const CreateCategory = () => {
       if (res.data.success) {
         toast.success("category added successfully");
         setIsLoading(false);
+        getCategories();
         console.log("category added successfully");
       }
     } catch (error) {
@@ -48,9 +49,12 @@ const CreateCategory = () => {
     getCategories();
   }, []);
   return (
-    <div className="flex justify-center items-center w-screen h-screen">
-      <div className="flex flex-col w-full h-full  gap-5 p-20 bg-slate-200">
-        <form onSubmit={submitHandler} className="flex flex-col gap-5 px-4">
+    <div className="flex justify-center items-center w-screen h-screen bg-slate-200">
+      <div className="flex flex-col w-screen h-screen  gap-5 p-20 bg-slate-200">
+        <form
+          onSubmit={submitHandler}
+          className="flex flex-col gap-5 px-4 h-screen"
+        >
           <label
             className="font-medium text-lg capitalize"
             htmlFor="categoryName"
@@ -78,21 +82,21 @@ const CreateCategory = () => {
               Submit
             </button>
           )}
+          <div className="flex flex-col gap-5">
+            <h1 className="text-lg font-medium">Categories</h1>
+            {categories.map((category: any) => (
+              <div
+                key={category._id}
+                className="flex justify-between items-center px-4 py-2 bg-slate-100 rounded-sm"
+              >
+                <p>{category.name}</p>
+                <button className="text-white bg-red-500 px-4 py-2 rounded-sm">
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
         </form>
-        <div className="flex flex-col gap-5">
-          <h1 className="text-lg font-medium">Categories</h1>
-          {categories.map((category: any) => (
-            <div
-              key={category._id}
-              className="flex justify-between items-center px-4 py-2 bg-slate-100 rounded-sm"
-            >
-              <p>{category.name}</p>
-              <button className="text-white bg-red-500 px-4 py-2 rounded-sm">
-                Delete
-              </button>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );

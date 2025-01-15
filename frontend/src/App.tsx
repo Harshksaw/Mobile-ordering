@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Route,  Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 // import { QRCodeSVG } from "qrcode.react";
 
 import "./App.css";
@@ -10,8 +10,9 @@ import AddItem from "./components/AddItem";
 import AddCategory from "./components/AddCategory";
 
 import Navbar from "./components/Navbar";
-import AddItemsToCategory from "./components/AddCategory";
+// import AddItemsToCategory from "./components/AddCategory";
 import ViewItems from "./components/ViewItems";
+import CreateCategory from "./components/CreateMenu";
 
 function App() {
   // const qrCodeValue = `${window.location.origin}/orders`;
@@ -52,7 +53,7 @@ function App() {
           path="/createMenu"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <AddItemsToCategory />
+              <CreateCategory />
             </ProtectedRoute>
           }
         />
