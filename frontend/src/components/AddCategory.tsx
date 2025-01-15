@@ -60,10 +60,13 @@ const AddCategory = () => {
 
     try {
       setIsLoading(true);
-      const res = await axios.post(`${BASE_URL}/menu/addItemsToCategory`, {
-        categoryId,
-        itemIds,
-      });
+      const res = await axios.post(
+        `${BASE_URL}/api/v1/menu/addItemToCategory`,
+        {
+          categoryId,
+          itemIds,
+        }
+      );
       if (res.data.success) {
         toast.success("Items added to category successfully");
         setIsLoading(false);
@@ -77,7 +80,8 @@ const AddCategory = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-between w-full max-h-full gap-4 p-4">
+    <div className="md:flex justify-center items-center w-screen h-screen ">
+      {/* <div className="flex  flex-col  md:flex-row justify-between  w-full max-h-full gap-4 p-4"> */}
       <div className="w-full md:w-1/2 bg-white rounded-lg shadow-md p-4">
         <h2 className="text-xl font-bold mb-4">Add Items to Category</h2>
         <form onSubmit={submitHandler}>
@@ -146,6 +150,7 @@ const AddCategory = () => {
         </form>
       </div>
     </div>
+    // </div>
   );
 };
 

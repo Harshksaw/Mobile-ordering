@@ -26,7 +26,9 @@ const AddItem = () => {
   });
   const [sizesLength, setSizesLength] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     const [field, index, sizeField] = name.split(".");
     if (field === "sizes") {
@@ -91,12 +93,12 @@ const AddItem = () => {
   };
 
   return (
-    <div className="flex w-screen h-screen justify-center items-center">
-      <div className="flex flex-col gap-5 p-15 bg-slate-100 rounded-sm">
-        <form
-          onSubmit={submitHandler}
-          className="flex flex-col gap-5 px-4 bg-slate-100 rounded-sm w-full translate-y-auto"
-        >
+    <form
+      onSubmit={submitHandler}
+      className="flex flex-col gap-5 px-4 bg-slate-100 rounded-sm w-full "
+    >
+      <div className="flex  gap-5 p-15 bg-slate-100 rounded-sm">
+        <div className="flex flex-col gap-5 w-full md:w-1/2">
           <label htmlFor="dishName" className="font-medium text-lg capitalize">
             name
           </label>
@@ -115,10 +117,11 @@ const AddItem = () => {
           >
             description
           </label>
-          <input
-            type="text"
+          <textarea
+            // type="text"
             name="description"
             id="description"
+            rows={5}
             placeholder="enter item description"
             className="px-4 py-2 w-full text-lg"
             value={itemsDetails.description}
@@ -148,7 +151,9 @@ const AddItem = () => {
             value={itemsDetails.price}
             onChange={handleOnChange}
           />
-          {/* to select no of sizes */}
+        </div>
+        {/* to select no of sizes */}
+        <div className="flex flex-col gap-5 w-full md:w-1/2">
           <label htmlFor="size" className="font-medium text-lg capitalize">
             Total number of Sizes of item
           </label>
@@ -195,15 +200,15 @@ const AddItem = () => {
                 sizes: Array.from(
                   { length },
                   (_, i) =>
-                    itemsDetails.sizes[i] || {
-                      name: "",
+                  itemsDetails.sizes[i] || {
+                  name: "",
                       price: 0,
                       quantity: "",
-                    }
-                ),
-              });
-            }}
-          /> */}
+                      }
+                      ),
+                      });
+                      }}
+                      /> */}
 
           <p className="font-bold"> Sizes of item details</p>
           {Array.from({ length: sizesLength }).map((_, index) => (
@@ -255,20 +260,20 @@ const AddItem = () => {
               />
             </div>
           ))}
-          {isLoading ? (
-            <Loader2 />
-          ) : (
-            <button
-              type="submit"
-              className="text-white px-4 py-2 text-lg capitalize mb-2"
-            >
-              {" "}
-              Submit
-            </button>
-          )}
-        </form>
+        </div>
       </div>
-    </div>
+      {isLoading ? (
+        <Loader2 />
+      ) : (
+        <button
+          type="submit"
+          className="text-white px-4 py-2 text-lg capitalize mb-2"
+        >
+          {" "}
+          Submit
+        </button>
+      )}
+    </form>
   );
 };
 
