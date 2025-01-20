@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-interface Item {
+export interface Item {
   _id: string;
   name: string;
   description: string;

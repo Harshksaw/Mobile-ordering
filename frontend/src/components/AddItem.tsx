@@ -30,6 +30,7 @@ const AddItem = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    // destructuring the name to get the field and index
     const [field, index, sizeField] = name.split(".");
     if (field === "sizes") {
       // const sizeField = name.split(".")[1];

@@ -79,7 +79,7 @@ const createItem = async (req: Request, res: Response) => {
       newItem,
     });
   } catch (error) {
-    console.log(error);
+    console.log("create item error", error);
     res.status(400).json({ message: (error as Error).message });
   }
 };
@@ -90,6 +90,7 @@ const getAllItems = async (req: Request, res: Response) => {
     const items = await Item.find();
     res.status(200).json({ success: true, items });
   } catch (error) {
+    console.log("error in get all items", error);
     res.status(500).json({ message: (error as Error).message });
   }
 };
@@ -100,8 +101,11 @@ const getMenuItemById = async (req: Request, res: Response) => {
     if (!menuItem) {
       return res.status(404).json({ message: "Menu item not found" });
     }
-    res.status(200).json({ success: true, menuItem });
+    res
+      .status(200)
+      .json({ success: true, menuItem, message: "Menu item fetched" });
   } catch (error) {
+    console.log("error in get menu item by id", error);
     res.status(500).json({ message: (error as Error).message });
   }
 };
@@ -119,6 +123,7 @@ const updateMenuItem = async (req: Request, res: Response) => {
     }
     res.status(200).json(updatedMenuItem);
   } catch (error) {
+    console.log("error in update menu item ", error);
     res.status(400).json({ message: (error as Error).message });
   }
 };
@@ -134,6 +139,7 @@ const deleteMenuItem = async (req: Request, res: Response) => {
     }
     res.status(200).json({ success: true, message: "Menu item deleted" });
   } catch (error) {
+    console.log("error in delete menu item to", error);
     res.status(500).json({ message: (error as Error).message });
   }
 };
@@ -147,6 +153,7 @@ const createCategory = async (req: Request, res: Response) => {
     const newCategory = await category.save();
     res.status(201).json({ success: "true", newCategory });
   } catch (error) {
+    console.log("error in create category", error);
     res.status(400).json({ message: (error as Error).message });
   }
 };
@@ -159,6 +166,7 @@ export const getAllCategory = async (req: Request, res: Response) => {
       categories,
     });
   } catch (error) {
+    console.log("error in get all category", error);
     return res.status(400).json({ message: (error as Error).message });
   }
 };
@@ -187,6 +195,7 @@ const addItemsToCategory = async (req: Request, res: Response) => {
 
     res.status(200).json({ success: true, category });
   } catch (error) {
+    console.log("error in add item to category", error);
     res.status(500).json({ message: (error as Error).message });
   }
 };
@@ -213,6 +222,7 @@ const getItemsFromCategory = async (req: Request, res: Response) => {
 
     res.status(200).json(category.items);
   } catch (error) {
+    console.log("error in get items from category", error);
     res.status(500).json({ message: (error as Error).message });
   }
 };

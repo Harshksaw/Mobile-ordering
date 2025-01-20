@@ -19,7 +19,9 @@ const Home: React.FC<HomeProps> = ({ isAuthenticated }) => {
   socket.on("order-processsing", (data) => {
     console.log("Message received:", data);
   });
-
+  socket.on("get-all-orders", (data) => {
+    console.log("All orders", data);
+  });
   return (
     <div className="h-full w-full flex-col gap-20 bg-green-100 text-red-500 flex items-center justify-center">
       {isAuthenticated && (
