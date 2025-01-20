@@ -30,6 +30,9 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, handleLogout }) => {
           <li>
             <Link to="/viewItem">View Menu</Link>
           </li>
+          <li>
+            <Link to="/viewOrders">View Orders</Link>
+          </li>
         </ul>
       )}
     </div>
