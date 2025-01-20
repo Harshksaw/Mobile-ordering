@@ -44,7 +44,7 @@ const Menu = () => {
               </tr>
             </thead>
             <tbody>
-              {menuDetails?.map((item: Item) => (
+              {menuDetails?.map((item: MenuItem) => (
                 <tr key={item._id} className="hover:bg-gray-100">
                   <td className="px-4 py-2 border-b text-center">
                     <img

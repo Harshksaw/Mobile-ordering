@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { io } from "socket.io-client";
-import { Edit, Trash } from "lucide-react";
+import { Edit } from "lucide-react";
 import { toast } from "react-toastify";
 
 interface OrderItem {
   item: string;
+  name: string;
   size: string;
   price: number;
   _id: string;
@@ -13,7 +14,12 @@ interface OrderItem {
 
 interface Order {
   _id: string;
-  items: OrderItem[];
+  items: {
+    _id: string;
+    item: OrderItem;
+    size: string;
+    price: number;
+  }[];
   status: string;
   createdAt: string;
   updatedAt: string;
@@ -59,7 +65,7 @@ const Orders = () => {
 
   useEffect(() => {
     getOrders();
-  }, []);
+  }, [BASE_URL]);
 
   return (
     <div className="container mx-auto p-4">
