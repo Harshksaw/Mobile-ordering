@@ -13,13 +13,24 @@ export const createOrder = async (req: Request, res: Response) => {
 
     // await newOrder.save();
     console.log(newOrder);
+    const order = await newOrder.populate({
+      path: "items.item",
+      select: "name _id",
+    });
+    //  to send message to all connected clients
+    // getAllOrders();
+    emitMessageToGroup("12345", "order-created", order);
     return res.status(201).json({
       succees: true,
       message: "order created successfully",
       newOrder,
     });
   } catch (error) {
-    console.log("errir in create order", error);
+    console.log("error in create order", error);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+    });
   }
 };
 
@@ -43,6 +54,7 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
       updatedOrder,
     });
   } catch (error) {
+    console.log("error in update order status", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -64,6 +76,24 @@ export const getOrderByStatus = async (req: Request, res: Response) => {
       orders,
     });
   } catch (error) {
+    console.log("error in get orderby status:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const orders = await Order.find()
+      .populate({
+        path: "items.item",
+        select: "name _id",
+      })
+      .sort({ createdAt: -1 });
+    // emitMessageToGroup("12345", "get-all-orders", orders);
+
+    res.status(200).json({ success: true, orders });
+  } catch (error) {
+    console.log("error in get all orders", error);
+    // res.status(500).json({ message: (error as Error).message });
   }
 };

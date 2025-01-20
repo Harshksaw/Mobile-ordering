@@ -13,6 +13,8 @@ import Navbar from "./components/Navbar";
 // import AddItemsToCategory from "./components/AddCategory";
 import ViewItems from "./components/ViewItems";
 import CreateCategory from "./components/CreateMenu";
+import Menu from "./components/Menu";
+import Orders from "./pages/Order";
 
 function App() {
   // const qrCodeValue = `${window.location.origin}/orders`;
@@ -65,7 +67,8 @@ function App() {
             // </ProtectedRoute>
           }
         />
-
+        <Route path="/viewMenu" element={<Menu />} />
+        <Route path="/viewOrders" element={<Orders />} />
         {/* <Route
           path="/orders"
           element={

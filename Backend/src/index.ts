@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 const server = createServer(app);
 
 // Initialize socket with the HTTP server instance
-// initializeSocket(server); 
+initializeSocket(server);
 
 server.listen(port, async () => {
   console.log(`Server listening on port ${port}`);
