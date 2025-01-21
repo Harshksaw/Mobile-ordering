@@ -9,6 +9,7 @@ interface IOrder extends Document {
   }[];
   status: string;
   token: number;
+  clientId: string;
 }
 const orderSchema = new mongoose.Schema(
   {
@@ -30,6 +31,7 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
     token: { type: Number },
+    clientId: { type: String, required: true }, // Add clientId field to the schema
   },
   {
     timestamps: true,
