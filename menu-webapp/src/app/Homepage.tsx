@@ -24,7 +24,7 @@ export default function HomePage() {
 
       <main className="max-w-6xl mx-auto p-6">
         <h1 className="text-4xl font-bold text-yellow-400 mb-8 text-center">
-          Burger Paradise
+          {process.env.NEXT_PUBLIC_SITE_NAME}
         </h1>
 
         <Suspense fallback={<div>Loading menu...</div>}>
