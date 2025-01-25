@@ -1,0 +1,1 @@
+// Register service worker for PWA capabilities 
