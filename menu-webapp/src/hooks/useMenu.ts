@@ -1,21 +1,26 @@
 import { useState, useEffect } from 'react';
+import { fetchMenu } from '@/lib/api';
 
 export const useMenu = () => {
   const [menu, setMenu] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Implement caching strategy
-    const fetchMenu = async () => {
-      const cached = await caches.match('/api/menu');
-      if (cached) {
-        const data = await cached.json();
+    const getMenu = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchMenu();
         setMenu(data);
-        return;
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
       }
-      // Fetch and cache
     };
-    fetchMenu();
+
+    getMenu();
   }, []);
 
-  return menu;
+  return { menu, loading, error };
 }; 
