@@ -6,10 +6,10 @@ import { useCart } from '@/hooks/useCart';
 import { Header } from '@/components/layout/Header';
 import { MenuGrid } from '@/components/menu/MenuGrid';
 
-// const CartModal = dynamic(() => import('../components/cart/CartModal'), {
-//   loading: () => <div>Loading...</div>,
-//   ssr: false
-// });
+const CartModal = dynamic(() => import('../components/cart/CartModal'), {
+  loading: () => <div>Loading...</div>,
+  ssr: false
+});
 
 export default function HomePage() {
   const [showCart, setShowCart] = useState(false);
@@ -31,13 +31,13 @@ export default function HomePage() {
           <MenuGrid onAddToCart={addToCart} />
         </Suspense>
 
-        {/* {showCart && (
+        {showCart && (
           <CartModal
             cart={cart}
             onClose={() => setShowCart(false)}
             onRemoveItem={removeFromCart}
           />
-        )} */}
+        )}
       </main>
     </div>
   );
