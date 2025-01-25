@@ -10,7 +10,7 @@ interface Props {
 const MenuItem = memo(({ item, onAddToCart }: Props) => {
   return (
     <div className="bg-gray-800  
-    mt-16
+
     mb-4
     h-72 w-full flex flex-col justify-between
     items-center
@@ -32,7 +32,7 @@ const MenuItem = memo(({ item, onAddToCart }: Props) => {
 
         <h3 className="text-xl font-semibold text-yellow-400 mb-2">{item.name}</h3>
         {/* <p className="text-gray-400 mb-2">{item.description}</p> */}
-        <p className="text-2xl font-bold text-yellow-400 mb-4">{item.price}</p>
+        <p className="text-2xl font-bold text-yellow-400 mb-2">{item.price}</p>
         </div>
         <button 
           onClick={() => onAddToCart(item)}
