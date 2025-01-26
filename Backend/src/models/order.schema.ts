@@ -13,6 +13,13 @@ interface IOrder extends Document {
 }
 const orderSchema = new mongoose.Schema(
   {
+    user:{
+      name:{ type: String, required: false },
+      email: { type: String, required:false}
+    },
+
+
+
     items: [
       {
         item: { type: Schema.Types.ObjectId, ref: "Item", required: true },

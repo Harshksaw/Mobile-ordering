@@ -5,11 +5,13 @@ import { Suspense, useState } from 'react';
 import { useCart } from '@/hooks/useCart';
 import { Header } from '@/components/layout/Header';
 import { MenuGrid } from '@/components/menu/MenuGrid';
+import { Progress } from "@/components/ui/progress"
 
-// const CartModal = dynamic(() => import('../components/cart/CartModal'), {
-//   loading: () => <div>Loading...</div>,
-//   ssr: false
-// });
+const CartModal = dynamic(() => import('../components/cart/CartModal'), {
+  loading: () => <Progress value={63} />
+  ,
+  ssr: false
+});
 
 export default function HomePage() {
   const [showCart, setShowCart] = useState(false);
@@ -27,17 +29,17 @@ export default function HomePage() {
           {process.env.NEXT_PUBLIC_SITE_NAME}
         </h1>
 
-        <Suspense fallback={<div>Loading menu...</div>}>
+        <Suspense fallback={<Progress value={33} />}>
           <MenuGrid onAddToCart={addToCart} />
         </Suspense>
 
-        {/* {showCart && (
+        {showCart && (
           <CartModal
             cart={cart}
             onClose={() => setShowCart(false)}
             onRemoveItem={removeFromCart}
           />
-        )} */}
+        )}
       </main>
     </div>
   );

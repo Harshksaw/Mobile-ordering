@@ -4,10 +4,16 @@ import { emitMessageToGroup } from "../socket";
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { items } = req.body;
+    const { items , name , phone , uuid} = req.body;
+    console.log("🚀 ~ createOrder ~ body:", req.body)
+
+
 
     const newOrder = await Order.create({
       items,
+      name,
+      phone,
+      clientId : uuid,
       status: "processing",
     });
 

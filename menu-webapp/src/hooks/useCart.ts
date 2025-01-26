@@ -3,11 +3,14 @@ import { CartItem } from '@/types';
 
 export const useCart = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  console.log("🚀 ~ useCart ~ cart:", cart)
   const [itemCount, setItemCount] = useState(0);
 
   const addToCart = useCallback((item: CartItem) => {
+    console.log("🚀 ~ addToCart ~ item:", item)
     setCart((prevCart) => {
-      const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
+      const existingItem = prevCart.find((cartItem) => cartItem._id === item._id);
+      console.log("🚀 ~ setCart ~ existingItem:", existingItem)
       if (existingItem) {
         return prevCart.map((cartItem) =>
           cartItem.id === item.id

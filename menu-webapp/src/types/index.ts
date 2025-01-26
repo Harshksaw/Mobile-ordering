@@ -1,5 +1,5 @@
 export interface CartItem {
-  id: number;
+  _id: number;
   name: string;
   price: string;
   quantity: number;
@@ -9,6 +9,7 @@ export interface CartItem {
 
 export interface MenuItem {
   id: number;
+  _id: number;
   name: string;
   price: string;
   description: string;
