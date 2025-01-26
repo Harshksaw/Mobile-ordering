@@ -4,14 +4,18 @@ import { FaTimes, FaShoppingCart, FaUser, FaCheck } from 'react-icons/fa';
 import axios from 'axios';
 import { API_URL } from '@/lib/api';
 import getOrCreateUniqueId from '@/lib/token';
+import { tokenStorage } from '@/lib/tokenStorage';
 
 interface CartModalProps {
   cart: CartItem[];
+  token: number;
   onClose: () => void;
   onRemoveItem: (id: number) => void;
+  changeToken : (token: number)=> void;
+
 }
 
-const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
+const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModalProps) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
@@ -44,8 +48,10 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
         const res = await axios.post(`${API_URL}/api/v1/order/createOrder`, orderData);
         
         if (res.data.success) {
+          const newToken = res.data.data.token;
+          changeToken(newToken);
+          tokenStorage.setToken(newToken);
           onClose();
-          // Optional: Show success toast/message
         }
       } catch (error) {
         console.error('Error creating order:', error);
@@ -92,21 +98,27 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
                 {cart.map((item) => (
                   <div 
                     key={item._id} 
-                    className="bg-gray-700 rounded-lg p-4 flex flex-col justify-between relative"
+                    className="bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl p-5 
+                      flex flex-col justify-between relative shadow-lg hover:shadow-2xl
+                      transition-all duration-300 border border-gray-600 hover:border-yellow-500/30
+                      group"
                   >
-            
-
-                    <div className='flex flex-col justify-center items-start'>
-                      <h3 className="text-white font-medium text-sm mb-1 pr-12">{item.name}</h3>
-                      <p className="text-gray-300 text-sm">Quantity: {item.quantity}</p>
-                      <p className="text-yellow-400 font-bold mt-1">
-                        Total: Rs {(parseFloat(item.price) * item.quantity).toFixed(2)}
+                    <div className='flex flex-col justify-center items-start space-y-3'>
+                      <h3 className="text-white font-medium text-lg mb-1 pr-12 group-hover:text-yellow-400">
+                        {item.name}
+                      </h3>
+                      <p className="text-gray-300 text-base bg-gray-800/50 px-3 py-1 rounded-full">
+                        Quantity: {item.quantity}
+                      </p>
+                      <p className="text-yellow-400 font-bold text-lg">
+                        Total: ₹{(parseFloat(item.price) * item.quantity).toFixed(2)}
                       </p>
                     </div>
                     <button
                       onClick={() => onRemoveItem(item._id)}
-                      className="mt-2 text-red-400 hover:text-red-300 text-sm py-1 px-2
-                        border border-red-400 rounded hover:bg-red-400/10 transition-colors"
+                      className="mt-4 text-red-400 hover:text-white text-sm py-2 px-4
+                        border border-red-400 rounded-lg hover:bg-red-500 
+                        transition-all duration-300 w-full font-medium"
                     >
                       Remove
                     </button>
@@ -121,7 +133,9 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
           <div className="flex-1">
             <div className="space-y-10">
               <div className='space-y-4'>
-                <label htmlFor="name" className="block text-gray-300 mb-2  text-2xl font-bold">Name</label>
+                <label htmlFor="name" className="block text-gray-300 mb-2 text-2xl font-bold">
+                  Name
+                </label>
                 <input
                   id="name"
                   type="text"
@@ -129,12 +143,17 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  placeholder="Enter your  name"
-                  className="w-full bg-gray-700 text-xl text-white rounded-md px-4 py-4"
+                  placeholder="Enter your name"
+                  className="w-full bg-gray-700/50 text-xl text-white rounded-xl px-6 py-4
+                    border border-gray-600 focus:border-yellow-500 focus:ring-2 
+                    focus:ring-yellow-500/20 focus:outline-none transition-all duration-300
+                    placeholder:text-gray-400"
                 />
               </div>
               <div>
-                <label htmlFor="phone" className="block text-gray-300 mb-2 text-2xl font-bold">Phone</label>
+                <label htmlFor="phone" className="block text-gray-300 mb-2 text-2xl font-bold">
+                  Phone
+                </label>
                 <input
                   id="phone"
                   type="tel"
@@ -144,7 +163,10 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
                   maxLength={10}
                   required
                   placeholder="Enter your phone number"
-                  className="w-full bg-gray-700 text-xl text-white rounded-md px-4 py-4"
+                  className="w-full bg-gray-700/50 text-xl text-white rounded-xl px-6 py-4
+                    border border-gray-600 focus:border-yellow-500 focus:ring-2 
+                    focus:ring-yellow-500/20 focus:outline-none transition-all duration-300
+                    placeholder:text-gray-400"
                 />
               </div>
             </div>
@@ -153,25 +175,30 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
       case 3:
         return (
           <div className="flex-1">
-            <div className="space-y-4">
-              <div className="border-b border-gray-700 pb-4">
-                <h3 className="text-white font-medium mb-2">Order Details</h3>
+            <div className="space-y-6">
+              <div className="border-b border-gray-700 pb-6">
+                <h3 className="text-white font-bold text-xl mb-4">Order Summary</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {cart.map((item) => (
-                    <div key={item.id} className="text-gray-300 bg-gray-700/50 p-3 rounded">
-                      <div className="font-medium">{item.name}</div>
-                      <div className="text-sm">Quantity: {item.quantity}</div>
-                      <div className="text-yellow-400 mt-1">
-                        Rs {(parseFloat(item.price) * item.quantity).toFixed(2)}
+                    <div key={item.id} 
+                      className="text-gray-300 bg-gray-700/50 p-4 rounded-xl
+                        border border-gray-600 hover:border-yellow-500/30">
+                      <div className="font-medium text-lg text-yellow-400">{item.name}</div>
+                      <div className="text-base mt-2">Quantity: {item.quantity}</div>
+                      <div className="text-lg font-bold mt-2">
+                        ₹{(parseFloat(item.price) * item.quantity).toFixed(2)}
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="border-b border-gray-700 pb-4">
-                <h3 className="text-white font-medium mb-2">Customer Details</h3>
-                <div className="text-gray-300">Name: {formData.name}</div>
-                <div className="text-gray-300">Phone: {formData.phone}</div>
+              <div className="border-b border-gray-700 pb-6">
+                <h3 className="text-white font-bold text-xl mb-4">Customer Details</h3>
+                <div className="bg-gray-700/50 p-4 rounded-xl space-y-2
+                  border border-gray-600">
+                  <div className="text-gray-300 text-lg">Name: {formData.name}</div>
+                  <div className="text-gray-300 text-lg">Phone: {formData.phone}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -180,15 +207,17 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
-      <div className="bg-gray-800 w-full max-w-md h-full p-6 flex flex-col">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-yellow-400">
+    <div className="fixed inset-0 bg-black/80 z-50 flex justify-end backdrop-blur-sm">
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 w-full max-w-md h-full p-8 
+        flex flex-col shadow-2xl">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-yellow-400">
             {step === 1 ? 'Your Cart' : step === 2 ? 'Your Details' : 'Confirm Order'}
           </h2>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-white"
+            className="text-gray-400 hover:text-white hover:rotate-90 
+              transition-all duration-300"
             aria-label="Close cart"
           >
             <FaTimes size={24} />
@@ -196,31 +225,38 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
         </div>
 
         {cart.length === 0 ? (
-          <p className="text-gray-400 text-center text-2xl">Your cart is empty</p>
+          <p className="text-gray-400 text-center text-2xl font-medium">
+            Your cart is empty
+          </p>
         ) : (
           <>
             {renderStepIndicator()}
             {renderStep()}
-            <div className="border-t border-gray-700 pt-4 mt-auto">
+            <div className="border-t border-gray-700 pt-6 mt-auto">
               <div className="flex justify-between items-center mb-6">
-                <span className="text-white text-lg">Total:</span>
-                <span className="text-yellow-400 text-2xl font-bold">Rs {total.toFixed(2)}</span>
+                <span className="text-white text-xl">Total:</span>
+                <span className="text-yellow-400 text-3xl font-bold">
+                  ₹{total.toFixed(2)}
+                </span>
               </div>
               
               <div className="flex justify-between gap-4">
                 {step > 1 && (
                   <button
                     onClick={() => setStep(step - 1)}
-                    className="flex-1 bg-gray-700 text-white py-3 px-4 rounded-md 
-                      hover:bg-gray-600 transition-colors font-bold"
+                    className="flex-1 bg-gray-700 text-white py-4 px-6 rounded-xl
+                      hover:bg-gray-600 transition-all duration-300 font-bold shadow-lg
+                      hover:shadow-xl border border-gray-600 hover:border-gray-500"
                   >
                     Back
                   </button>
                 )}
                 <button 
                   onClick={() => handleSubmit()}
-                  className="flex-1 bg-yellow-500 text-gray-900 py-3 px-4 rounded-md 
-                    hover:bg-yellow-400 transition-colors font-bold text-center"
+                  className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-400 
+                    text-gray-900 py-4 px-6 rounded-xl transition-all duration-300
+                    font-bold text-center shadow-lg hover:shadow-xl hover:from-yellow-400 
+                    hover:to-yellow-500"
                 >
                   {step === 3 ? 'Place Order' : 'Continue'}
                 </button>

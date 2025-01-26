@@ -14,7 +14,7 @@ export const MenuGrid = ({ onAddToCart }: MenuGridProps) => {
   if (error) return <div>Error loading menu</div>;
   console.log(menu)
   return (
-    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20 mt-20">
+    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20 mt-40 z-10">
       {menu?.items.map((item: MenuItemType) => (
         <MenuItem key={item._id} item={item} onAddToCart={onAddToCart} />
       ))}
