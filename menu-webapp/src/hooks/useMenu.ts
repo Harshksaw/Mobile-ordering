@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { fetchMenu } from '@/lib/api';
+import { useState, useEffect } from "react";
+import { fetchMenu } from "@/lib/api";
 
 export const useMenu = () => {
   const [menu, setMenu] = useState([]);
@@ -13,7 +13,10 @@ export const useMenu = () => {
         const data = await fetchMenu();
         setMenu(data);
       } catch (err) {
-        setError(err);
+        {
+          /* @ts-expect-error: Suspense component requires a fallback */
+          setError(err);
+        }
       } finally {
         setLoading(false);
       }
@@ -23,4 +26,4 @@ export const useMenu = () => {
   }, []);
 
   return { menu, loading, error };
-}; 
+};

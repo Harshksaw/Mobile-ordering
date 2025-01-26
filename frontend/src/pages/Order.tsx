@@ -3,8 +3,17 @@ import axios from "axios";
 import { io } from "socket.io-client";
 import { Edit } from "lucide-react";
 import { toast } from "react-toastify";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import EditOrderStatus from "@/components/EditOrderStatus";
 
-interface OrderItem {
+export interface OrderItem {
   item: string;
   name: string;
   size: string;
@@ -12,7 +21,7 @@ interface OrderItem {
   _id: string;
 }
 
-interface Order {
+export interface Order {
   _id: string;
   items: {
     _id: string;
@@ -28,8 +37,10 @@ interface Order {
 
 const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [isEditing, setIsEditing] = useState<Order | null>(null);
   const ordersRef = React.useRef<Order[]>([]);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
+  // const tokenMap = new Map<number, number>();
 
   useEffect(() => {
     const socket = io(`${BASE_URL}`);
@@ -47,6 +58,11 @@ const Orders = () => {
       toast.success("New order added");
     });
 
+    // orders.forEach((row, index) => {
+    //   if (!tokenMap.has(row.token)) {
+    //     tokenMap.set(row.token, index);
+    //   }
+    // });
     return () => {
       socket.disconnect();
     };
@@ -65,66 +81,98 @@ const Orders = () => {
 
   useEffect(() => {
     getOrders();
+    // orders.forEach((row, index) => {
+    //   if (!tokenMap.has(row.token)) {
+    //     tokenMap.set(row.token, index);
+    //   }
+    // });
   }, [BASE_URL]);
 
   return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Orders</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 border-b">Token</th>
-              <th className="px-4 py-2 border-b">Item</th>
-              <th className="px-4 py-2 border-b">size</th>
-              <th className="px-4 py-2 border-b">price</th>
-              <th className="px-4 py-2 border-b">Status</th>
-              <th className="px-4 py-2 border-b">Update Status</th>
-              {/* <th className="px-4 py-2 border-b">Created At</th> */}
-              {/* <th className="px-4 py-2 border-b">Updated At</th> */}
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <React.Fragment key={order._id}>
-                {order.items.map((item, index) => (
-                  <tr key={item._id} className="hover:bg-gray-100">
-                    {index === 0 && (
-                      <td
-                        className="px-4 py-2 border-b border text-center"
-                        rowSpan={order.items.length}
-                      >
-                        {order.token}
-                      </td>
-                    )}
-                    <td className="px-4 py-2 border-b text-center">
-                      {item.item.name}
-                    </td>
-                    <td className="px-4 py-2 border-b text-center">
-                      {item.size}
-                    </td>
-                    <td className="px-4 py-2 border-b text-center">
-                      ${item.price.toFixed(2)}
-                    </td>
-                    {index === 0 && (
-                      <td
-                        className="px-4 py-2 border-b border text-center"
-                        rowSpan={order.items.length}
-                      >
-                        {order.status}
-                      </td>
-                    )}
-                    <td className="px-4 py-2 border-b flex justify-center">
-                      <Edit />
-                    </td>
-                  </tr>
-                ))}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+    <>
+      <div className="container mx-auto p-4">
+        <h2 className="text-2xl font-bold mb-4">Orders</h2>
+        <div className="overflow-x-auto">
+          <Table className="min-w-full  bg-white border border-gray-200">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
+                  Token
+                </TableHead>
+                <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
+                  Item
+                </TableHead>
+                <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
+                  size
+                </TableHead>
+                <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
+                  price
+                </TableHead>
+                <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
+                  Status
+                </TableHead>
+                <TableHead className="px-4 py-2 font-bold text-center text-black">
+                  Update Status
+                </TableHead>
+                {/* <th className="px-4 py-2 border-b">Created At</th> */}
+                {/* <th className="px-4 py-2 border-b">Updated At</th> */}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {orders.map((order) => (
+                <React.Fragment key={order._id}>
+                  {order.items.map((item, index) => (
+                    <TableRow key={item._id} className="hover:bg-gray-100">
+                      {index === 0 && (
+                        <TableCell
+                          className="px-4 py-2 border-b border text-center"
+                          rowSpan={order.items.length}
+                        >
+                          {order.token}
+                        </TableCell>
+                      )}
+                      <TableCell className="px-4 py-2 border-b text-center">
+                        {item.item.name}
+                      </TableCell>
+                      <TableCell className="px-4 py-2 border-b text-center">
+                        {item.size}
+                      </TableCell>
+                      <TableCell className="px-4 py-2 border-b text-center">
+                        ${item.price.toFixed(2)}
+                      </TableCell>
+                      {index === 0 && (
+                        <TableCell
+                          className="px-4 py-2 border-b border text-center"
+                          rowSpan={order.items.length}
+                        >
+                          {order.status}
+                        </TableCell>
+                      )}
+                      {index === 0 && (
+                        <TableCell className="px-4 py-2  flex justify-center items-center">
+                          <button
+                            className="flex items-center p-2 bg-red-500 text-white rounded-xl"
+                            onClick={() => setIsEditing(order)}
+                          >
+                            <Edit />
+                          </button>
+                        </TableCell>
+                      )}
+                    </TableRow>
+                  ))}
+                </React.Fragment>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-    </div>
+      {isEditing && (
+        <EditOrderStatus
+          order={isEditing}
+          closeModel={() => setIsEditing(null)}
+        />
+      )}
+    </>
   );
 };
 

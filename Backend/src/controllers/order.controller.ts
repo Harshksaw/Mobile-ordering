@@ -10,7 +10,7 @@ export const createOrder = async (req: Request, res: Response) => {
       totalAmount,
       customerName,
       customerPhone,
-      status = 'pending'
+      status = "pending",
     } = req.body;
 
     // Create new order
@@ -20,12 +20,12 @@ export const createOrder = async (req: Request, res: Response) => {
         item: item.item,
         quantity: item.quantity,
         price: item.price,
-        name: item.name
+        name: item.name,
       })),
       totalAmount,
       customerName,
       customerPhone,
-      status
+      status,
     });
 
     // Save the order
@@ -33,23 +33,24 @@ export const createOrder = async (req: Request, res: Response) => {
 
     res.status(201).json({
       success: true,
-      data: savedOrder
+      data: savedOrder,
     });
-
   } catch (error) {
-    console.error('Error creating order:', error);
+    console.error("Error creating order:", error);
     res.status(400).json({
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to create order'
+      error: error instanceof Error ? error.message : "Failed to create order",
     });
   }
 };
 
 export const updateOrderStatus = async (req: Request, res: Response) => {
   try {
-    const { orderId, status } = req.body;
+    const { id, status } = req.body;
     const updatedOrder = await Order.findByIdAndUpdate(
-      orderId,
+      {
+        _id: id,
+      },
       { status },
       { new: true }
     );
@@ -57,7 +58,9 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     if (!updatedOrder) {
       return res.status(404).json({ message: "Order not found" });
     }
-    emitMessageToGroup("12345", "order-processsing", "this is order");
+    if (status === "completed" && updatedOrder) {
+      emitMessageToGroup("12345", "order-updated", updatedOrder);
+    }
     res.status(200).json({
       success: true,
       message: "updated order status",
@@ -73,7 +76,10 @@ export const getOrderByStatus = async (req: Request, res: Response) => {
   try {
     const { status } = req.params;
 
-    const orders = await Order.find({ status });
+    const orders = await Order.find({ status }).populate({
+      path: "items.item",
+      select: "name _id",
+    });
 
     if (orders.length === 0) {
       return res
@@ -94,17 +100,16 @@ export const getOrderByStatus = async (req: Request, res: Response) => {
 
 export const getOrders = async (req: Request, res: Response) => {
   try {
-    const orders = await Order.find()
-      .sort({ createdAt: -1 });
+    const orders = await Order.find().sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
-      data: orders
+      data: orders,
     });
   } catch (error) {
     res.status(400).json({
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to fetch orders'
+      error: error instanceof Error ? error.message : "Failed to fetch orders",
     });
   }
 };
