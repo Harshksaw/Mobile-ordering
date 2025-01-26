@@ -11,39 +11,55 @@ interface IOrder extends Document {
   token: number;
   clientId: string;
 }
-const orderSchema = new mongoose.Schema(
-  {
-    user:{
-      name:{ type: String, required: false },
-      email: { type: String, required:false}
-    },
 
-
-
-    items: [
-      {
-        item: { type: Schema.Types.ObjectId, ref: "Item", required: true },
-        size: { type: String, required: true },
-        price: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
-    status: {
-      type: String,
-      // will be changed
-      enum: ["processing", "completed ", "cancelled"],
-      default: "processsing",
-      required: true,
-    },
-    token: { type: Number },
-    clientId: { type: String, required: true }, // Add clientId field to the schema
+const orderItemSchema = new mongoose.Schema({
+  item: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'MenuItem',
+    required: true
   },
-  {
-    timestamps: true,
+  quantity: {
+    type: Number,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
   }
-);
+});
+
+const orderSchema = new mongoose.Schema({
+  clientId: {
+    type: String,
+    required: true
+  },
+  items: [orderItemSchema],
+  status: {
+    type: String,
+    enum: ['pending', 'processing', 'completed', 'cancelled'],
+    default: 'pending'
+  },
+  totalAmount: {
+    type: Number,
+    required: true
+  },
+  customerName: {
+    type: String,
+    required: true
+  },
+  customerPhone: {
+    type: String,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
 
 orderSchema.pre("save", async function (next) {
   if (this.isNew) {
@@ -62,6 +78,5 @@ orderSchema.pre("save", async function (next) {
     next();
   }
 });
-const Order = mongoose.model("Order", orderSchema);
 
-export default Order;
+export const Order = mongoose.model("Order", orderSchema);
