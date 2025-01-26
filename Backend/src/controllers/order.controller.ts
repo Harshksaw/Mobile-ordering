@@ -1,40 +1,46 @@
 import { Response, Request } from "express";
-import Order from "../models/order.schema";
+import { Order } from "../models/order.schema";
 import { emitMessageToGroup } from "../socket";
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { items , name , phone , clientId} = req.body;
-    console.log("🚀 ~ createOrder ~ body:", req.body)
-
-
-
-    const newOrder = await Order.create({
+    const {
+      clientId,
       items,
-      name,
-      phone,
-      clientId ,
-      status: "processing",
+      totalAmount,
+      customerName,
+      customerPhone,
+      status = 'pending'
+    } = req.body;
+
+    // Create new order
+    const order = new Order({
+      clientId,
+      items: items.map((item: any) => ({
+        item: item.item,
+        quantity: item.quantity,
+        price: item.price,
+        name: item.name
+      })),
+      totalAmount,
+      customerName,
+      customerPhone,
+      status
     });
 
-    // await newOrder.save();
-    console.log(newOrder);
-    const order = await newOrder.populate({
-      path: "items.item",
-      select: "name _id",
+    // Save the order
+    const savedOrder = await order.save();
+
+    res.status(201).json({
+      success: true,
+      data: savedOrder
     });
-   
-    emitMessageToGroup("12345", "order-created", order);
-    return res.status(201).json({
-      succees: true,
-      message: "order created successfully",
-      newOrder,
-    });
+
   } catch (error) {
-    console.log("error in create order", error);
-    return res.status(500).json({
+    console.error('Error creating order:', error);
+    res.status(400).json({
       success: false,
-      message: "internal server error",
+      error: error instanceof Error ? error.message : 'Failed to create order'
     });
   }
 };
@@ -86,19 +92,19 @@ export const getOrderByStatus = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllOrders = async (req: Request, res: Response) => {
+export const getOrders = async (req: Request, res: Response) => {
   try {
     const orders = await Order.find()
-      .populate({
-        path: "items.item",
-        select: "name _id",
-      })
       .sort({ createdAt: -1 });
-    // emitMessageToGroup("12345", "get-all-orders", orders);
 
-    res.status(200).json({ success: true, orders });
+    res.status(200).json({
+      success: true,
+      data: orders
+    });
   } catch (error) {
-    console.log("error in get all orders", error);
-    // res.status(500).json({ message: (error as Error).message });
+    res.status(400).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to fetch orders'
+    });
   }
 };
