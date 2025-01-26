@@ -4,7 +4,7 @@ import { emitMessageToGroup } from "../socket";
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { items , name , phone , uuid} = req.body;
+    const { items , name , phone , clientId} = req.body;
     console.log("🚀 ~ createOrder ~ body:", req.body)
 
 
@@ -13,7 +13,7 @@ export const createOrder = async (req: Request, res: Response) => {
       items,
       name,
       phone,
-      clientId : uuid,
+      clientId ,
       status: "processing",
     });
 
@@ -23,8 +23,7 @@ export const createOrder = async (req: Request, res: Response) => {
       path: "items.item",
       select: "name _id",
     });
-    //  to send message to all connected clients
-    // getAllOrders();
+   
     emitMessageToGroup("12345", "order-created", order);
     return res.status(201).json({
       succees: true,

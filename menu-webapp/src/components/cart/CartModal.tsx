@@ -25,21 +25,32 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
     if (step < 3) {
       setStep(step + 1);
     } else {
+      try {
+        const orderData = {
+          clientId: getOrCreateUniqueId(),
+          items: cart.map(item => ({
+            item: item._id,
+            quantity: item.quantity,
+            price: parseFloat(item.price),
+            name: item.name
+          })),
+          totalAmount: total,
+          customerName: formData.name,
+          customerPhone: formData.phone,
+          status: 'pending'
+        };
 
-        const res = await axios.post(`${API_URL}/api/v1/order/createOrder`,{
-            name: formData.name,
-            phone: formData.phone,
-            items: cart,
-            uuid: getOrCreateUniqueId(),
-        })
+        const res = await axios.post(`${API_URL}/api/v1/order/createOrder`, orderData);
+        console.log("🚀 ~ handleSubmit ~ res:", res);
         
-        console.log("🚀 ~ handleSubmit ~ res:", res)
-
-
-        
-      console.log('Order submitted:', { ...formData, cart, total });
-      onClose();
-      // Add order submission logic here
+        if (res.data.success) {
+          // Show success message or redirect
+          onClose();
+        }
+      } catch (error) {
+        console.error('Error creating order:', error);
+        // Show error message to user
+      }
     }
   };
 
