@@ -13,7 +13,7 @@ export const useCart = () => {
       console.log("🚀 ~ setCart ~ existingItem:", existingItem)
       if (existingItem) {
         return prevCart.map((cartItem) =>
-          cartItem.id === item.id
+          cartItem._id === item._id
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         );
@@ -24,7 +24,7 @@ export const useCart = () => {
   }, []);
 
   const removeFromCart = useCallback((itemId: number) => {
-    setCart((prev) => prev.filter((item) => item.id !== itemId));
+    setCart((prev) => prev.filter((item) => item._id !== itemId));
     setItemCount((prev) => prev - 1);
   }, []);
 

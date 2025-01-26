@@ -180,7 +180,7 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
                 <h3 className="text-white font-bold text-xl mb-4">Order Summary</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {cart.map((item) => (
-                    <div key={item.id} 
+                    <div key={item._id} 
                       className="text-gray-300 bg-gray-700/50 p-4 rounded-xl
                         border border-gray-600 hover:border-yellow-500/30">
                       <div className="font-medium text-lg text-yellow-400">{item.name}</div>

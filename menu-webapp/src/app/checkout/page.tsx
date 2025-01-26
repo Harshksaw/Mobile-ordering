@@ -63,7 +63,7 @@ export default function CheckoutPage() {
           <div className="bg-gray-800 p-6 rounded-lg">
             <h2 className="text-xl font-semibold text-yellow-400 mb-4">Order Summary</h2>
             {cart.map((item) => (
-              <div key={item.id} className="flex justify-between mb-2 text-gray-300">
+              <div key={item._id} className="flex justify-between mb-2 text-gray-300">
                 <span>{item.name} x {item.quantity}</span>
                 <span>Rs {(parseFloat(item.price) * item.quantity).toFixed(2)}</span>
               </div>
@@ -119,7 +119,7 @@ export default function CheckoutPage() {
               <div className="border-b border-gray-700 pb-4">
                 <h3 className="text-white font-medium mb-2">Order Details</h3>
                 {cart.map((item) => (
-                  <div key={item.id} className="text-gray-300">
+                  <div key={item._id} className="text-gray-300">
                     {item.name} x {item.quantity}
                   </div>
                 ))}
