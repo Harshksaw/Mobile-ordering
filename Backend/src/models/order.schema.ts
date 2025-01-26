@@ -1,15 +1,19 @@
 import mongoose, { Document } from "mongoose";
 import Counter from "./counter.schema";
-const Schema = mongoose.Schema;
+
 interface IOrder extends Document {
   items: {
     item: mongoose.Schema.Types.ObjectId;
-    size: string;
+    quantity: number;
     price: number;
+    name: string;
   }[];
   status: string;
   token: number;
   clientId: string;
+  totalAmount: number;
+  customerName: string;
+  customerPhone: string;
 }
 
 const orderItemSchema = new mongoose.Schema({
@@ -20,7 +24,8 @@ const orderItemSchema = new mongoose.Schema({
   },
   quantity: {
     type: Number,
-    required: true
+    required: true,
+    min: 1
   },
   price: {
     type: Number,
@@ -32,36 +37,45 @@ const orderItemSchema = new mongoose.Schema({
   }
 });
 
-const orderSchema = new mongoose.Schema({
+const orderSchema = new mongoose.Schema<IOrder>({
   clientId: {
     type: String,
     required: true
   },
-  items: [orderItemSchema],
+  items: {
+    type: [orderItemSchema],
+    required: true,
+    validate: [(val: any[]) => val.length > 0, 'Order must have at least one item']
+  },
   status: {
     type: String,
     enum: ['pending', 'processing', 'completed', 'cancelled'],
     default: 'pending'
   },
+  token: {
+    type: Number
+  },
   totalAmount: {
     type: Number,
-    required: true
+    required: true,
+    min: 0
   },
   customerName: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   customerPhone: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+ 
+},{
+  timestamps:true
 });
 
-orderSchema.pre("save", async function (next) {
+orderSchema.pre<IOrder>("save", async function (next) {
   if (this.isNew) {
     try {
       const counter = await Counter.findOneAndUpdate(
@@ -70,13 +84,13 @@ orderSchema.pre("save", async function (next) {
         { new: true, upsert: true }
       );
       this.token = counter.value;
-    } catch (error) {
-      throw Error(error as any);
       next();
+    } catch (error) {
+      next(error as Error);
     }
   } else {
     next();
   }
 });
 
-export const Order = mongoose.model("Order", orderSchema);
+export const Order = mongoose.model<IOrder>("Order", orderSchema);
