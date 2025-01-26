@@ -26,8 +26,9 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
       setStep(step + 1);
     } else {
       try {
+        const clientId = getOrCreateUniqueId();
         const orderData = {
-          clientId: getOrCreateUniqueId(),
+          clientId,
           items: cart.map(item => ({
             item: item._id,
             quantity: item.quantity,
@@ -41,11 +42,10 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
         };
 
         const res = await axios.post(`${API_URL}/api/v1/order/createOrder`, orderData);
-        console.log("🚀 ~ handleSubmit ~ res:", res);
         
         if (res.data.success) {
-          // Show success message or redirect
           onClose();
+          // Optional: Show success toast/message
         }
       } catch (error) {
         console.error('Error creating order:', error);
