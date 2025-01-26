@@ -1,28 +1,35 @@
-import { useState } from 'react';
-import { CartItem } from '@/types';
-import { FaTimes, FaShoppingCart, FaUser, FaCheck } from 'react-icons/fa';
-import axios from 'axios';
-import { API_URL } from '@/lib/api';
-import getOrCreateUniqueId from '@/lib/token';
-import { tokenStorage } from '@/lib/tokenStorage';
+import { useState } from "react";
+import { CartItem } from "@/types";
+import { FaTimes, FaShoppingCart, FaUser, FaCheck } from "react-icons/fa";
+import axios from "axios";
+import { API_URL } from "@/lib/api";
+import getOrCreateUniqueId from "@/lib/token";
+import { tokenStorage } from "@/lib/tokenStorage";
 
 interface CartModalProps {
   cart: CartItem[];
   token: number;
   onClose: () => void;
   onRemoveItem: (id: number) => void;
-  changeToken : (token: number)=> void;
-
+  changeToken: (token: number) => void;
 }
 
-const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModalProps) => {
+const CartModal = ({
+  cart,
+  onClose,
+  onRemoveItem,
+  changeToken,
+}: CartModalProps) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
+    name: "",
+    phone: "",
   });
 
-  const total = cart.reduce((sum, item) => sum + (parseFloat(item?.price) * item.quantity), 0);
+  const total = cart.reduce(
+    (sum, item) => sum + parseFloat(item?.price) * item.quantity,
+    0
+  );
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -33,20 +40,23 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
         const clientId = getOrCreateUniqueId();
         const orderData = {
           clientId,
-          items: cart.map(item => ({
+          items: cart.map((item) => ({
             item: item._id,
             quantity: item.quantity,
             price: parseFloat(item.price),
-            name: item.name
+            name: item.name,
           })),
           totalAmount: total,
           customerName: formData.name,
           customerPhone: formData.phone,
-          status: 'pending'
+          status: "pending",
         };
 
-        const res = await axios.post(`${API_URL}/api/v1/order/createOrder`, orderData);
-        
+        const res = await axios.post(
+          `${API_URL}/api/v1/order/createOrder`,
+          orderData
+        );
+
         if (res.data.success) {
           const newToken = res.data.data.token;
           changeToken(newToken);
@@ -54,34 +64,44 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
           onClose();
         }
       } catch (error) {
-        console.error('Error creating order:', error);
+        console.error("Error creating order:", error);
         // Show error message to user
       }
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const renderStepIndicator = () => (
     <div className="flex justify-center mb-6">
       <div className="flex items-center">
-        <div className={`flex items-center justify-center w-8 h-8 rounded-full 
-          ${step >= 1 ? 'bg-yellow-500' : 'bg-gray-700'}`}>
+        <div
+          className={`flex items-center justify-center w-8 h-8 rounded-full 
+          ${step >= 1 ? "bg-yellow-500" : "bg-gray-700"}`}
+        >
           <FaShoppingCart className="text-gray-900 w-4 h-4" />
         </div>
-        <div className={`w-12 h-1 ${step >= 2 ? 'bg-yellow-500' : 'bg-gray-700'}`} />
-        <div className={`flex items-center justify-center w-8 h-8 rounded-full 
-          ${step >= 2 ? 'bg-yellow-500' : 'bg-gray-700'}`}>
+        <div
+          className={`w-12 h-1 ${step >= 2 ? "bg-yellow-500" : "bg-gray-700"}`}
+        />
+        <div
+          className={`flex items-center justify-center w-8 h-8 rounded-full 
+          ${step >= 2 ? "bg-yellow-500" : "bg-gray-700"}`}
+        >
           <FaUser className="text-gray-900 w-4 h-4" />
         </div>
-        <div className={`w-12 h-1 ${step === 3 ? 'bg-yellow-500' : 'bg-gray-700'}`} />
-        <div className={`flex items-center justify-center w-8 h-8 rounded-full 
-          ${step === 3 ? 'bg-yellow-500' : 'bg-gray-700'}`}>
+        <div
+          className={`w-12 h-1 ${step === 3 ? "bg-yellow-500" : "bg-gray-700"}`}
+        />
+        <div
+          className={`flex items-center justify-center w-8 h-8 rounded-full 
+          ${step === 3 ? "bg-yellow-500" : "bg-gray-700"}`}
+        >
           <FaCheck className="text-gray-900 w-4 h-4" />
         </div>
       </div>
@@ -96,14 +116,14 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
             <div className="flex-1 overflow-y-auto mb-6">
               <div className="grid grid-cols-2 gap-4">
                 {cart.map((item) => (
-                  <div 
-                    key={item._id} 
+                  <div
+                    key={item._id}
                     className="bg-gradient-to-br from-gray-700 to-gray-800 rounded-xl p-5 
                       flex flex-col justify-between relative shadow-lg hover:shadow-2xl
                       transition-all duration-300 border border-gray-600 hover:border-yellow-500/30
                       group"
                   >
-                    <div className='flex flex-col justify-center items-start space-y-3'>
+                    <div className="flex flex-col justify-center items-start space-y-3">
                       <h3 className="text-white font-medium text-lg mb-1 pr-12 group-hover:text-yellow-400">
                         {item.name}
                       </h3>
@@ -111,7 +131,8 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
                         Quantity: {item.quantity}
                       </p>
                       <p className="text-yellow-400 font-bold text-lg">
-                        Total: ₹{(parseFloat(item.price) * item.quantity).toFixed(2)}
+                        Total: ₹
+                        {(parseFloat(item.price) * item.quantity).toFixed(2)}
                       </p>
                     </div>
                     <button
@@ -132,8 +153,11 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
         return (
           <div className="flex-1">
             <div className="space-y-10">
-              <div className='space-y-4'>
-                <label htmlFor="name" className="block text-gray-300 mb-2 text-2xl font-bold">
+              <div className="space-y-4">
+                <label
+                  htmlFor="name"
+                  className="block text-gray-300 mb-2 text-2xl font-bold"
+                >
                   Name
                 </label>
                 <input
@@ -151,7 +175,10 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
                 />
               </div>
               <div>
-                <label htmlFor="phone" className="block text-gray-300 mb-2 text-2xl font-bold">
+                <label
+                  htmlFor="phone"
+                  className="block text-gray-300 mb-2 text-2xl font-bold"
+                >
                   Phone
                 </label>
                 <input
@@ -177,14 +204,22 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
           <div className="flex-1">
             <div className="space-y-6">
               <div className="border-b border-gray-700 pb-6">
-                <h3 className="text-white font-bold text-xl mb-4">Order Summary</h3>
+                <h3 className="text-white font-bold text-xl mb-4">
+                  Order Summary
+                </h3>
                 <div className="grid grid-cols-2 gap-4">
                   {cart.map((item) => (
-                    <div key={item._id} 
+                    <div
+                      key={item._id}
                       className="text-gray-300 bg-gray-700/50 p-4 rounded-xl
-                        border border-gray-600 hover:border-yellow-500/30">
-                      <div className="font-medium text-lg text-yellow-400">{item.name}</div>
-                      <div className="text-base mt-2">Quantity: {item.quantity}</div>
+                        border border-gray-600 hover:border-yellow-500/30"
+                    >
+                      <div className="font-medium text-lg text-yellow-400">
+                        {item.name}
+                      </div>
+                      <div className="text-base mt-2">
+                        Quantity: {item.quantity}
+                      </div>
                       <div className="text-lg font-bold mt-2">
                         ₹{(parseFloat(item.price) * item.quantity).toFixed(2)}
                       </div>
@@ -193,11 +228,19 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
                 </div>
               </div>
               <div className="border-b border-gray-700 pb-6">
-                <h3 className="text-white font-bold text-xl mb-4">Customer Details</h3>
-                <div className="bg-gray-700/50 p-4 rounded-xl space-y-2
-                  border border-gray-600">
-                  <div className="text-gray-300 text-lg">Name: {formData.name}</div>
-                  <div className="text-gray-300 text-lg">Phone: {formData.phone}</div>
+                <h3 className="text-white font-bold text-xl mb-4">
+                  Customer Details
+                </h3>
+                <div
+                  className="bg-gray-700/50 p-4 rounded-xl space-y-2
+                  border border-gray-600"
+                >
+                  <div className="text-gray-300 text-lg">
+                    Name: {formData.name}
+                  </div>
+                  <div className="text-gray-300 text-lg">
+                    Phone: {formData.phone}
+                  </div>
                 </div>
               </div>
             </div>
@@ -208,13 +251,19 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex justify-end backdrop-blur-sm">
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 w-full max-w-md h-full p-8 
-        flex flex-col shadow-2xl">
+      <div
+        className="bg-gradient-to-br from-gray-800 to-gray-900 w-full max-w-md h-full p-8 
+        flex flex-col shadow-2xl"
+      >
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-yellow-400">
-            {step === 1 ? 'Your Cart' : step === 2 ? 'Your Details' : 'Confirm Order'}
+            {step === 1
+              ? "Your Cart"
+              : step === 2
+              ? "Your Details"
+              : "Confirm Order"}
           </h2>
-          <button 
+          <button
             onClick={onClose}
             className="text-gray-400 hover:text-white hover:rotate-90 
               transition-all duration-300"
@@ -239,7 +288,7 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
                   ₹{total.toFixed(2)}
                 </span>
               </div>
-              
+
               <div className="flex justify-between gap-4">
                 {step > 1 && (
                   <button
@@ -251,14 +300,14 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
                     Back
                   </button>
                 )}
-                <button 
+                <button
                   onClick={() => handleSubmit()}
                   className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-400 
                     text-gray-900 py-4 px-6 rounded-xl transition-all duration-300
                     font-bold text-center shadow-lg hover:shadow-xl hover:from-yellow-400 
                     hover:to-yellow-500"
                 >
-                  {step === 3 ? 'Place Order' : 'Continue'}
+                  {step === 3 ? "Place Order" : "Continue"}
                 </button>
               </div>
             </div>
@@ -269,4 +318,4 @@ const CartModal = ({ cart, onClose, onRemoveItem ,token , changeToken}: CartModa
   );
 };
 
-export default CartModal; 
+export default CartModal;
