@@ -13,8 +13,10 @@ const MenuItem = memo(({ item, onAddToCart }: Props) => {
       mb-4
       h-72 w-full flex flex-col justify-between
       items-center
+
+
       rounded-lg shadow-lg overflow-hidden border border-gray-700
-      hover:border-yellow-500 transition-all duration-300">
+      hover:border-yellow-500 transition-all duration-300 ">
       
       {/* Price Circle */}
       <div className="absolute -top-3 -right-3 w-20 h-16 bg-orange-400 

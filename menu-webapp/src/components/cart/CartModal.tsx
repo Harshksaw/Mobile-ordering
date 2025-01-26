@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { CartItem } from '@/types';
 import { FaTimes, FaShoppingCart, FaUser, FaCheck } from 'react-icons/fa';
+import axios from 'axios';
+import { API_URL } from '@/lib/api';
+import getOrCreateUniqueId from '@/lib/token';
 
 interface CartModalProps {
   cart: CartItem[];
@@ -22,6 +25,16 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
     if (step < 3) {
       setStep(step + 1);
     } else {
+
+        const res = await axios.post(`${API_URL}/api/v1/order/createOrder`,{
+            name: formData.name,
+            phone: formData.phone,
+            items: cart,
+            uuid: getOrCreateUniqueId(),
+        })
+        
+        console.log("🚀 ~ handleSubmit ~ res:", res)
+
 
         
       console.log('Order submitted:', { ...formData, cart, total });
@@ -70,13 +83,7 @@ const CartModal = ({ cart, onClose, onRemoveItem }: CartModalProps) => {
                     key={item._id} 
                     className="bg-gray-700 rounded-lg p-4 flex flex-col justify-between relative"
                   >
-                    {/* Price Circle */}
-                    <div className="absolute -top-3 -right-3 w-16 h-16 bg-yellow-500 
-                      rounded-full flex items-center justify-center transform rotate-12">
-                      <span className="text-gray-900 font-bold text-sm transform -rotate-12">
-                        Rs {(parseFloat(item.price)).toFixed(2)}
-                      </span>
-                    </div>
+            
 
                     <div className='flex flex-col justify-center items-start'>
                       <h3 className="text-white font-medium text-sm mb-1 pr-12">{item.name}</h3>
