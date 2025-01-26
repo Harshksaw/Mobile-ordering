@@ -35,7 +35,7 @@ const orderItemSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { _id: false }); // Prevent Mongoose from creating _id for subdocuments
 
 const orderSchema = new mongoose.Schema<IOrder>({
   clientId: {
@@ -45,7 +45,12 @@ const orderSchema = new mongoose.Schema<IOrder>({
   items: {
     type: [orderItemSchema],
     required: true,
-    validate: [(val: any[]) => val.length > 0, 'Order must have at least one item']
+    validate: {
+      validator: function(v: any[]) {
+        return Array.isArray(v) && v.length > 0;
+      },
+      message: 'Order must have at least one item'
+    }
   },
   status: {
     type: String,
@@ -69,10 +74,9 @@ const orderSchema = new mongoose.Schema<IOrder>({
     type: String,
     required: true,
     trim: true
-  },
- 
-},{
-  timestamps:true
+  }
+}, {
+  timestamps: true
 });
 
 orderSchema.pre<IOrder>("save", async function (next) {
