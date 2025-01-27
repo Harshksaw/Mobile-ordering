@@ -26,7 +26,7 @@ export default function HomePage() {
     if (savedToken) {
       setToken(savedToken);
     }
-  }, []);
+  }, [cart, removeFromCart]);
 
   const changeToken = async (newToken: number) => {
     setToken(newToken);

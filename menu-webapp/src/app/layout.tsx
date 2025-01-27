@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Burger Paradise',
+  title: 'Food Villa',
   description: 'Fast food ordering system'
 };
 

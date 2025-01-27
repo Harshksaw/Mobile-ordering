@@ -28,5 +28,10 @@ export const useCart = () => {
     setItemCount((prev) => prev - 1);
   }, []);
 
-  return { cart, itemCount, addToCart, removeFromCart };
+  const emptyCart = useCallback(() => {
+    setCart([]);
+    setItemCount(0);
+  }, []);
+
+  return { cart, itemCount, addToCart, removeFromCart, emptyCart };
 }; 
