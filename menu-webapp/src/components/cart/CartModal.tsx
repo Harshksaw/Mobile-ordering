@@ -5,6 +5,7 @@ import axios from "axios";
 import { API_URL } from "@/lib/api";
 import getOrCreateUniqueId from "@/lib/token";
 import { tokenStorage } from "@/lib/tokenStorage";
+import { useCart } from "@/hooks/useCart";
 
 interface CartModalProps {
   cart: CartItem[];
@@ -30,6 +31,8 @@ const CartModal = ({
     (sum, item) => sum + parseFloat(item?.price) * item.quantity,
     0
   );
+
+  const {emptyCart} = useCart()
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -61,6 +64,8 @@ const CartModal = ({
           const newToken = res.data.data.token;
           changeToken(newToken);
           tokenStorage.setToken(newToken);
+          emptyCart()
+
           onClose();
         }
       } catch (error) {
@@ -203,11 +208,11 @@ const CartModal = ({
         return (
           <div className="flex-1">
             <div className="space-y-6">
-              <div className="border-b border-gray-700 pb-6">
+              <div className="border-b border-gray-700 pb-2">
                 <h3 className="text-white font-bold text-xl mb-4">
                   Order Summary
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 h-[40vh] overflow-y-auto ">
                   {cart.map((item) => (
                     <div
                       key={item._id}
