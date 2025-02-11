@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { Order } from "../models/order.schema";
-import { emitMessageToGroup } from "../socket";
+import { BroadCastMessageToAdmin } from "../socket";
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
@@ -30,6 +30,10 @@ export const createOrder = async (req: Request, res: Response) => {
 
     // Save the order
     const savedOrder = await order.save();
+    // emit message to group
+    // emitMessageToGroup("12345", "new-order", savedOrder);
+    // broadcast message to all admins
+    BroadCastMessageToAdmin("new-order", savedOrder);
 
     res.status(201).json({
       success: true,
@@ -58,8 +62,10 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     if (!updatedOrder) {
       return res.status(404).json({ message: "Order not found" });
     }
-    if (status === "completed" && updatedOrder) {
-      emitMessageToGroup("12345", "order-updated", updatedOrder);
+    if (status === "completed") {
+      // socket -id
+      // emitMessageToGroup("12345", "order-updated", updatedOrder);
+      BroadCastMessageToAdmin("order-updated", updatedOrder);
     }
     res.status(200).json({
       success: true,

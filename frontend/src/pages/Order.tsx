@@ -12,29 +12,53 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import EditOrderStatus from "@/components/EditOrderStatus";
+import { Link } from "react-router-dom";
 
-export interface OrderItem {
-  item: string;
-  name: string;
-  size: string;
-  price: number;
+// export interface OrderItem {
+//   // _id: string;
+//   item: string;
+//   name: string;
+//   price: number;
+//   quantity: number;
+// }
+
+// export interface Order {
+//   _id: string;
+//   clientId: string;
+//   customerName: string;
+//   customerPhone: string;
+//   items: {
+//     // _id: string;
+//     item: OrderItem[];
+//     // size: string;
+//     // price: number;
+//   }[];
+//   status: string;
+
+//   totalAmount: number;
+//   createdAt: string;
+//   updatedAt: string;
+//   token: number;
+// }
+interface OrderItem {
   _id: string;
+  name: string;
+  price: number;
+  quantity: number;
 }
 
-export interface Order {
+interface Order {
   _id: string;
-  items: {
-    _id: string;
-    item: OrderItem;
-    size: string;
-    price: number;
-  }[];
+  clientId: string;
+  customerName: string;
+  customerPhone: string;
+  items: OrderItem[];
   status: string;
+  totalAmount: number;
   createdAt: string;
   updatedAt: string;
   token: number;
 }
-
 const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isEditing, setIsEditing] = useState<Order | null>(null);
@@ -47,7 +71,7 @@ const Orders = () => {
 
     socket.on("connect", () => {
       console.log("Connected to socket server");
-      socket.emit("joinGroup", "12345");
+      // socket.emit("joinGroup", "12345");
     });
 
     socket.on("order-created", (data) => {
@@ -71,14 +95,14 @@ const Orders = () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/v1/order/getAllOrder`);
       if (res.data.success) {
-        ordersRef.current = res.data.orders;
-        setOrders(res.data.orders);
+        ordersRef.current = res.data.data;
+        setOrders(res.data.data);
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
   };
-
+  console.log(orders);
   useEffect(() => {
     getOrders();
     // orders.forEach((row, index) => {
@@ -92,6 +116,14 @@ const Orders = () => {
     <>
       <div className="container mx-auto p-4">
         <h2 className="text-2xl font-bold mb-4">Orders</h2>
+        <h2 className="text-2xl font-bold mb-4 text-right">
+          <Link
+            to="/order/new"
+            className="bg-blue-500 text-white p-2 rounded text-right mb-4"
+          >
+            View Completed Orders
+          </Link>
+        </h2>
         <div className="overflow-x-auto">
           <Table className="min-w-full  bg-white border border-gray-200">
             <TableHeader>
@@ -103,7 +135,7 @@ const Orders = () => {
                   Item
                 </TableHead>
                 <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
-                  size
+                  Quantity
                 </TableHead>
                 <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
                   price
@@ -132,10 +164,10 @@ const Orders = () => {
                         </TableCell>
                       )}
                       <TableCell className="px-4 py-2 border-b text-center">
-                        {item.item.name}
+                        {item.name}
                       </TableCell>
                       <TableCell className="px-4 py-2 border-b text-center">
-                        {item.size}
+                        {item.quantity}
                       </TableCell>
                       <TableCell className="px-4 py-2 border-b text-center">
                         ${item.price.toFixed(2)}
@@ -149,8 +181,12 @@ const Orders = () => {
                         </TableCell>
                       )}
                       {index === 0 && (
-                        <TableCell className="px-4 py-2  flex justify-center items-center">
+                        <TableCell
+                          className="px-4 py-2  flex justify-center items-center"
+                          rowSpan={order.items.length}
+                        >
                           <button
+                            title="Edit"
                             className="flex items-center p-2 bg-red-500 text-white rounded-xl"
                             onClick={() => setIsEditing(order)}
                           >

@@ -49,7 +49,7 @@ const Orders = () => {
     });
 
     socket.on("order-completed", (data) => {
-      console.log("New order created", data);
+      console.log(" order completed", data);
       // ordersRef.current = [...ordersRef.current, data];
       ordersRef.current = [data, ...ordersRef.current];
       setOrders([...ordersRef.current]);
@@ -67,7 +67,9 @@ const Orders = () => {
   }, [BASE_URL]);
   const getOrders = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/v1/order/getAllOrder`);
+      const res = await axios.get(
+        `${BASE_URL}/api/v1/order/getOrderByStatus/completed`
+      );
       if (res.data.success) {
         ordersRef.current = res.data.orders;
         setOrders(res.data.orders);
@@ -108,9 +110,9 @@ const Orders = () => {
               <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
                 Status
               </TableHead>
-              <TableHead className="px-4 py-2 font-bold text-center text-black">
+              {/* <TableHead className="px-4 py-2 font-bold text-center text-black">
                 Update Status
-              </TableHead>
+              </TableHead> */}
               {/* <th className="px-4 py-2 border-b">Created At</th> */}
               {/* <th className="px-4 py-2 border-b">Updated At</th> */}
             </TableRow>
@@ -145,11 +147,11 @@ const Orders = () => {
                         {order.status}
                       </TableCell>
                     )}
-                    {index === 0 && (
+                    {/* {index === 0 && (
                       <TableCell className="px-4 py-2  flex justify-center items-center">
                         <Edit />
                       </TableCell>
-                    )}
+                    )} */}
                   </TableRow>
                 ))}
               </React.Fragment>

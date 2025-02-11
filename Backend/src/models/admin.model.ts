@@ -19,6 +19,7 @@ const AdminSchema: Schema = new Schema(
     password: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     role: { type: String, required: true, default: "admin" },
+    // socketId: { type: String },
     // no need of below is included in timestamps
     // createdAt: { type: Date, default: Date.now },
     // updatedAt: { type: Date, default: Date.now }
