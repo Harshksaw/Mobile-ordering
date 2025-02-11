@@ -34,7 +34,7 @@ interface Order {
   token: number;
 }
 
-const Orders = () => {
+const CompletedOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const ordersRef = React.useRef<Order[]>([]);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -45,15 +45,17 @@ const Orders = () => {
 
     socket.on("connect", () => {
       console.log("Connected to socket server");
-      socket.emit("joinGroup", "12345");
+      // socket.emit("joinGroup", "12345");
     });
 
-    socket.on("order-completed", (data) => {
+    socket.on("order-updated", (data) => {
       console.log(" order completed", data);
       // ordersRef.current = [...ordersRef.current, data];
-      ordersRef.current = [data, ...ordersRef.current];
-      setOrders([...ordersRef.current]);
-      toast.success("New order added");
+      if (data.status === "completed") {
+        ordersRef.current = [data, ...ordersRef.current];
+        setOrders([...ordersRef.current]);
+        toast.success("New order added");
+      }
     });
 
     // orders.forEach((row, index) => {
@@ -163,4 +165,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default CompletedOrders;

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import EditOrderStatus from "@/components/EditOrderStatus";
 import { Link } from "react-router-dom";
+import { Socket } from "dgram";
 
 // export interface OrderItem {
 //   // _id: string;
@@ -65,6 +66,20 @@ const Orders = () => {
   const ordersRef = React.useRef<Order[]>([]);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   // const tokenMap = new Map<number, number>();
+  const editOrders = async (id: string, status: string) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/api/v1/order/updateOrderStatus`,
+        { id, status }
+      );
+      if (res.data.success) {
+        // closeModel();
+        setIsEditing(null);
+      }
+    } catch (error) {
+      console.log("error in edit order", error);
+    }
+  };
 
   useEffect(() => {
     const socket = io(`${BASE_URL}`);
@@ -80,6 +95,16 @@ const Orders = () => {
       ordersRef.current = [data, ...ordersRef.current];
       setOrders([...ordersRef.current]);
       toast.success("New order added");
+    });
+
+    socket.on("order-updated", (data) => {
+      console.log("update order", data);
+      const index = ordersRef.current.findIndex(
+        (order) => order._id === data._id
+      );
+      ordersRef.current[index] = data;
+      setOrders([...ordersRef.current]);
+      toast.success("Order updated");
     });
 
     // orders.forEach((row, index) => {
@@ -118,7 +143,7 @@ const Orders = () => {
         <h2 className="text-2xl font-bold mb-4">Orders</h2>
         <h2 className="text-2xl font-bold mb-4 text-right">
           <Link
-            to="/order/new"
+            to="/viewCompletedOrders"
             className="bg-blue-500 text-white p-2 rounded text-right mb-4"
           >
             View Completed Orders
@@ -151,8 +176,8 @@ const Orders = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
-                <React.Fragment key={order._id}>
+              {orders.map((order, index) => (
+                <React.Fragment key={index}>
                   {order.items.map((item, index) => (
                     <TableRow key={item._id} className="hover:bg-gray-100">
                       {index === 0 && (
@@ -206,6 +231,7 @@ const Orders = () => {
         <EditOrderStatus
           order={isEditing}
           closeModel={() => setIsEditing(null)}
+          editOrders={editOrders}
         />
       )}
     </>

@@ -67,6 +67,14 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
       // emitMessageToGroup("12345", "order-updated", updatedOrder);
       BroadCastMessageToAdmin("order-updated", updatedOrder);
     }
+    if (status === "processing")
+      BroadCastMessageToAdmin("order-updated", updatedOrder);
+
+    status === "cancelled" &&
+      BroadCastMessageToAdmin("order-updated", updatedOrder);
+    status === "pending" &&
+      BroadCastMessageToAdmin("order-updated", updatedOrder);
+
     res.status(200).json({
       success: true,
       message: "updated order status",
@@ -82,10 +90,11 @@ export const getOrderByStatus = async (req: Request, res: Response) => {
   try {
     const { status } = req.params;
 
-    const orders = await Order.find({ status }).populate({
-      path: "items.item",
-      select: "name _id",
-    });
+    const orders = await Order.find({ status });
+    // .populate({
+    //   path: "items.item",
+    //   select: "name _id",
+    // });
 
     if (orders.length === 0) {
       return res
