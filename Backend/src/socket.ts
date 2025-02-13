@@ -12,13 +12,13 @@ export const initializeSocket = (server: HttpServer): void => {
   });
 
   io.on("connection", (socket) => {
-    console.log("A user connected");
+    console.log(`Admin connected: ${socket.id}`);
     // check this
 
-    socket.on("joinGroup", (groupId) => {
-      socket.join(groupId);
-      console.log(`User joined group: ${groupId}`);
-    });
+    // socket.on("joinGroup", (groupId) => {
+    //   socket.join(groupId);
+    //   console.log(`User joined group: ${groupId}`);
+    // });
     socket.on("disconnect", () => {
       console.log("User disconnected");
     });
@@ -40,4 +40,11 @@ export const emitMessageToGroup = (
     throw new Error("Socket.io not initialized");
   }
   io.to(group).emit(event, message);
+};
+
+export const BroadCastMessageToAdmin = (event: string, message: any) => {
+  if (!io) {
+    throw new Error("Socket.io not initialized");
+  }
+  io.emit(event, message);
 };

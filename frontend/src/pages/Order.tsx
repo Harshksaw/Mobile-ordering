@@ -12,42 +12,81 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import EditOrderStatus from "@/components/EditOrderStatus";
+import { Link } from "react-router-dom";
+import { Socket } from "dgram";
 
-export interface OrderItem {
-  item: string;
-  name: string;
-  size: string;
-  price: number;
+// export interface OrderItem {
+//   // _id: string;
+//   item: string;
+//   name: string;
+//   price: number;
+//   quantity: number;
+// }
+
+// export interface Order {
+//   _id: string;
+//   clientId: string;
+//   customerName: string;
+//   customerPhone: string;
+//   items: {
+//     // _id: string;
+//     item: OrderItem[];
+//     // size: string;
+//     // price: number;
+//   }[];
+//   status: string;
+
+//   totalAmount: number;
+//   createdAt: string;
+//   updatedAt: string;
+//   token: number;
+// }
+interface OrderItem {
   _id: string;
+  name: string;
+  price: number;
+  quantity: number;
 }
 
-export interface Order {
+interface Order {
   _id: string;
-  items: {
-    _id: string;
-    item: OrderItem;
-    size: string;
-    price: number;
-  }[];
+  clientId: string;
+  customerName: string;
+  customerPhone: string;
+  items: OrderItem[];
   status: string;
+  totalAmount: number;
   createdAt: string;
   updatedAt: string;
   token: number;
 }
-
 const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isEditing, setIsEditing] = useState<Order | null>(null);
   const ordersRef = React.useRef<Order[]>([]);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   // const tokenMap = new Map<number, number>();
+  const editOrders = async (id: string, status: string) => {
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/api/v1/order/updateOrderStatus`,
+        { id, status }
+      );
+      if (res.data.success) {
+        // closeModel();
+        setIsEditing(null);
+      }
+    } catch (error) {
+      console.log("error in edit order", error);
+    }
+  };
 
   useEffect(() => {
     const socket = io(`${BASE_URL}`);
 
     socket.on("connect", () => {
       console.log("Connected to socket server");
-      socket.emit("joinGroup", "12345");
+      // socket.emit("joinGroup", "12345");
     });
 
     socket.on("order-created", (data) => {
@@ -56,6 +95,16 @@ const Orders = () => {
       ordersRef.current = [data, ...ordersRef.current];
       setOrders([...ordersRef.current]);
       toast.success("New order added");
+    });
+
+    socket.on("order-updated", (data) => {
+      console.log("update order", data);
+      const index = ordersRef.current.findIndex(
+        (order) => order._id === data._id
+      );
+      ordersRef.current[index] = data;
+      setOrders([...ordersRef.current]);
+      toast.success("Order updated");
     });
 
     // orders.forEach((row, index) => {
@@ -71,14 +120,14 @@ const Orders = () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/v1/order/getAllOrder`);
       if (res.data.success) {
-        ordersRef.current = res.data.orders;
-        setOrders(res.data.orders);
+        ordersRef.current = res.data.data;
+        setOrders(res.data.data);
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
   };
-
+  console.log(orders);
   useEffect(() => {
     getOrders();
     // orders.forEach((row, index) => {
@@ -92,6 +141,14 @@ const Orders = () => {
     <>
       <div className="container mx-auto p-4">
         <h2 className="text-2xl font-bold mb-4">Orders</h2>
+        <h2 className="text-2xl font-bold mb-4 text-right">
+          <Link
+            to="/viewCompletedOrders"
+            className="bg-blue-500 text-white p-2 rounded text-right mb-4"
+          >
+            View Completed Orders
+          </Link>
+        </h2>
         <div className="overflow-x-auto">
           <Table className="min-w-full  bg-white border border-gray-200">
             <TableHeader>
@@ -103,7 +160,7 @@ const Orders = () => {
                   Item
                 </TableHead>
                 <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
-                  size
+                  Quantity
                 </TableHead>
                 <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
                   price
@@ -119,8 +176,8 @@ const Orders = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
-                <React.Fragment key={order._id}>
+              {orders.map((order, index) => (
+                <React.Fragment key={index}>
                   {order.items.map((item, index) => (
                     <TableRow key={item._id} className="hover:bg-gray-100">
                       {index === 0 && (
@@ -132,10 +189,10 @@ const Orders = () => {
                         </TableCell>
                       )}
                       <TableCell className="px-4 py-2 border-b text-center">
-                        {item.item.name}
+                        {item.name}
                       </TableCell>
                       <TableCell className="px-4 py-2 border-b text-center">
-                        {item.size}
+                        {item.quantity}
                       </TableCell>
                       <TableCell className="px-4 py-2 border-b text-center">
                         ${item.price.toFixed(2)}
@@ -149,8 +206,12 @@ const Orders = () => {
                         </TableCell>
                       )}
                       {index === 0 && (
-                        <TableCell className="px-4 py-2  flex justify-center items-center">
+                        <TableCell
+                          className="px-4 py-2  flex justify-center items-center"
+                          rowSpan={order.items.length}
+                        >
                           <button
+                            title="Edit"
                             className="flex items-center p-2 bg-red-500 text-white rounded-xl"
                             onClick={() => setIsEditing(order)}
                           >
@@ -170,6 +231,7 @@ const Orders = () => {
         <EditOrderStatus
           order={isEditing}
           closeModel={() => setIsEditing(null)}
+          editOrders={editOrders}
         />
       )}
     </>

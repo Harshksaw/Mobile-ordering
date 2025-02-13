@@ -34,7 +34,7 @@ interface Order {
   token: number;
 }
 
-const Orders = () => {
+const CompletedOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const ordersRef = React.useRef<Order[]>([]);
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -45,15 +45,17 @@ const Orders = () => {
 
     socket.on("connect", () => {
       console.log("Connected to socket server");
-      socket.emit("joinGroup", "12345");
+      // socket.emit("joinGroup", "12345");
     });
 
-    socket.on("order-completed", (data) => {
-      console.log("New order created", data);
+    socket.on("order-updated", (data) => {
+      console.log(" order completed", data);
       // ordersRef.current = [...ordersRef.current, data];
-      ordersRef.current = [data, ...ordersRef.current];
-      setOrders([...ordersRef.current]);
-      toast.success("New order added");
+      if (data.status === "completed") {
+        ordersRef.current = [data, ...ordersRef.current];
+        setOrders([...ordersRef.current]);
+        toast.success("New order added");
+      }
     });
 
     // orders.forEach((row, index) => {
@@ -67,7 +69,9 @@ const Orders = () => {
   }, [BASE_URL]);
   const getOrders = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/v1/order/getAllOrder`);
+      const res = await axios.get(
+        `${BASE_URL}/api/v1/order/getOrderByStatus/completed`
+      );
       if (res.data.success) {
         ordersRef.current = res.data.orders;
         setOrders(res.data.orders);
@@ -108,9 +112,9 @@ const Orders = () => {
               <TableHead className="px-4 py-2 border-b text-center font-bold text-black">
                 Status
               </TableHead>
-              <TableHead className="px-4 py-2 font-bold text-center text-black">
+              {/* <TableHead className="px-4 py-2 font-bold text-center text-black">
                 Update Status
-              </TableHead>
+              </TableHead> */}
               {/* <th className="px-4 py-2 border-b">Created At</th> */}
               {/* <th className="px-4 py-2 border-b">Updated At</th> */}
             </TableRow>
@@ -145,11 +149,11 @@ const Orders = () => {
                         {order.status}
                       </TableCell>
                     )}
-                    {index === 0 && (
+                    {/* {index === 0 && (
                       <TableCell className="px-4 py-2  flex justify-center items-center">
                         <Edit />
                       </TableCell>
-                    )}
+                    )} */}
                   </TableRow>
                 ))}
               </React.Fragment>
@@ -161,4 +165,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default CompletedOrders;

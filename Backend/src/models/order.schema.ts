@@ -58,7 +58,7 @@ const orderSchema = new mongoose.Schema<IOrder>(
     },
     status: {
       type: String,
-      enum: ["pending", "processing", "completed", "cancelled"],
+      enum: ["pending", "processing", "completed", "cancelled", "pickedUp"],
       default: "pending",
     },
     token: {
