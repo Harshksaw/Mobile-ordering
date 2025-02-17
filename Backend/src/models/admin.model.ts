@@ -54,7 +54,7 @@ AdminSchema.methods.getJwtToken = async function () {
   if (!process.env.JWT_SECRET || !process.env.JWT_EXPIRES_TIME) {
     throw new Error("JWT_SECRET or JWT_EXPIRES_TIME is not defined");
   }
-  const token = await sign({ id: this._id }, process.env.JWT_SECRET, {
+  const token = sign({ id: this._id }, process.env.JWT_SECRET as string, {
     expiresIn: process.env.JWT_EXPIRES_TIME,
   });
 

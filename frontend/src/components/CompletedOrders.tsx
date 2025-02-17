@@ -48,7 +48,7 @@ const CompletedOrders = () => {
       // socket.emit("joinGroup", "12345");
     });
 
-    socket.on("order-updated", (data) => {
+    socket.on("order-completed", (data) => {
       console.log(" order completed", data);
       // ordersRef.current = [...ordersRef.current, data];
       if (data.status === "completed") {
