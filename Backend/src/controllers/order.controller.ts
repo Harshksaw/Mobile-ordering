@@ -65,15 +65,15 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     if (status === "completed") {
       // socket -id
       // emitMessageToGroup("12345", "order-updated", updatedOrder);
-      BroadCastMessageToAdmin("order-updated", updatedOrder);
+      BroadCastMessageToAdmin("order-completed", updatedOrder);
     }
     if (status === "processing")
-      BroadCastMessageToAdmin("order-updated", updatedOrder);
+      BroadCastMessageToAdmin("order-processing", updatedOrder);
 
     status === "cancelled" &&
-      BroadCastMessageToAdmin("order-updated", updatedOrder);
+      BroadCastMessageToAdmin("order-cancelled", updatedOrder);
     status === "pending" &&
-      BroadCastMessageToAdmin("order-updated", updatedOrder);
+      BroadCastMessageToAdmin("order-pending", updatedOrder);
 
     res.status(200).json({
       success: true,
